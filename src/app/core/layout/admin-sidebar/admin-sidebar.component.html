@@ -1,0 +1,58 @@
+<div class="w-[188px] bg-[#f9fafb] border-r border-[#eaecf0] flex flex-col h-full">
+
+  <!-- Logo -->
+  <div class="p-4 border-b border-[#eaecf0]">
+    <img alt="U.S. Department of Energy" src="assets/doe-logo.png" class="w-full" />
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 py-4">
+    <a
+      routerLink="/admin/dashboard"
+      routerLinkActive="bg-[#e8eef7] !text-black"
+      class="flex items-center gap-3 px-4 py-3 mx-2 rounded-lg text-[#344054] hover:bg-[#f3f4f6] transition-colors"
+      style="font-family: 'Figtree', sans-serif;"
+    >
+      <lucide-angular [img]="LayoutDashboard" class="w-5 h-5 shrink-0" />
+      <span class="text-[14px]">Dashboard</span>
+    </a>
+    <a
+      routerLink="/admin/projects"
+      routerLinkActive="bg-[#e8eef7] !text-black"
+      class="flex items-center gap-3 px-4 py-3 mx-2 mt-1 rounded-lg text-[#344054] hover:bg-[#f3f4f6] transition-colors"
+      style="font-family: 'Figtree', sans-serif;"
+    >
+      <lucide-angular [img]="FolderOpen" class="w-5 h-5 shrink-0" />
+      <span class="text-[14px]">My Projects</span>
+    </a>
+  </nav>
+
+  <!-- Bottom section -->
+  <div class="border-t border-[#eaecf0]">
+    <button class="flex items-center gap-3 px-4 py-3 mx-2 my-2 rounded-lg text-[#344054] hover:bg-[#f3f4f6] w-[calc(100%-16px)] cursor-pointer" style="font-family: 'Figtree', sans-serif;">
+      <lucide-angular [img]="HelpCircle" class="w-5 h-5 shrink-0" />
+      <span class="text-[14px]">Help</span>
+    </button>
+    <button
+      (click)="onLogout()"
+      class="flex items-center gap-3 px-4 py-3 mx-2 mb-2 rounded-lg text-[#344054] hover:bg-[#f3f4f6] w-[calc(100%-16px)] cursor-pointer"
+      style="font-family: 'Figtree', sans-serif;"
+    >
+      <lucide-angular [img]="LogOut" class="w-5 h-5 shrink-0" />
+      <span class="text-[14px]">Log out</span>
+    </button>
+
+    <!-- User info -->
+    <div class="border-t border-[#eaecf0] p-3">
+      <div class="flex items-center gap-2 rounded-lg p-2">
+        <div class="w-8 h-8 bg-[#ECF3EC] rounded-full flex items-center justify-center text-black text-[14px] shrink-0" style="font-family: 'Figtree', sans-serif;">
+          {{ authService.userInitials() }}
+        </div>
+        <div class="flex-1 text-left overflow-hidden">
+          <p class="text-[14px] text-black truncate" style="font-family: 'Figtree', sans-serif;">{{ authService.userFullName() }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

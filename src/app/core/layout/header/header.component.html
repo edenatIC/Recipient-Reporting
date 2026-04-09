@@ -1,0 +1,29 @@
+<header class="h-[68px] border-b border-[#eaecf0] bg-white flex items-center justify-between px-8">
+  <!-- Left: DOE logo -->
+  <img src="assets/doe-logo.png" alt="U.S. Department of Energy" class="h-10" />
+
+  <!-- Right: actions -->
+  <div class="flex items-center gap-4">
+    <!-- Help -->
+    <button class="w-8 h-8 flex items-center justify-center rounded-full border border-[#d0d5dd] text-[#667085] hover:bg-[#f9fafb] transition-colors cursor-pointer">
+      <lucide-icon [img]="HelpCircle" [size]="16" />
+    </button>
+
+    <!-- User avatar + name -->
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-[#ECF3EC] flex items-center justify-center text-xs font-semibold text-[#106636]">
+        {{ authService.userInitials() }}
+      </div>
+      <span class="text-sm font-medium text-[#344054]">{{ authService.userFullName() }}</span>
+    </div>
+
+    <!-- Logout -->
+    <button
+      (click)="logout()"
+      class="w-8 h-8 flex items-center justify-center text-[#667085] hover:text-[#344054] transition-colors cursor-pointer"
+      title="Sign out"
+    >
+      <lucide-icon [img]="LogOut" [size]="18" />
+    </button>
+  </div>
+</header>

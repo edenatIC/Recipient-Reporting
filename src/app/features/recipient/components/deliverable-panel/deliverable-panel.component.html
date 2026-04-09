@@ -1,0 +1,64 @@
+<div
+  class="fixed top-0 bottom-0 right-0 w-[500px] bg-white border-l border-[#eaecf0] flex flex-col shadow-lg z-50"
+  [class.panel-enter]="panelAnimating()"
+  style="transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"
+>
+
+  <!-- Header: no border, close button pinned right -->
+  <div class="px-6 py-5 shrink-0" style="display: flex; align-items: center; justify-content: flex-end;">
+    <button
+      (click)="close.emit()"
+      class="text-[#667085] hover:text-black transition-colors duration-200 cursor-pointer"
+    >
+      <lucide-angular [img]="X" class="w-5 h-5" />
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 overflow-y-auto px-6 pb-6">
+
+    <!-- Deliverable name -->
+    <div class="mb-2">
+      <h2 class="font-medium text-[20px] leading-[30px] text-black" style="font-family: 'Figtree', sans-serif;">
+        {{ deliverable().deliverable }}
+      </h2>
+    </div>
+
+    <!-- Meta -->
+    <div class="flex gap-2 mb-1">
+      <span class="text-[12px] leading-[22px] text-[#52565c]">Project: {{ deliverable().project }}</span>
+    </div>
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-[12px] leading-[22px] text-[#52565c]">Due: {{ deliverable().dueDate }}</span>
+      <span class="text-[12px] leading-[22px] text-[#52565c]">
+        Submitted: {{ deliverable().dateSubmitted ?? 'Not yet submitted' }}
+      </span>
+      <span
+        class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
+        [style]="getStatusBadgeStyle(deliverable().status)"
+      >
+        {{ deliverable().status }}
+      </span>
+    </div>
+
+    <!-- Placeholder sections -->
+    <div class="space-y-6">
+
+      <div class="space-y-2">
+        <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 1</p>
+        <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+      </div>
+
+      <div class="space-y-2">
+        <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 2</p>
+        <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+      </div>
+
+      <div class="space-y-2">
+        <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 3</p>
+        <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+      </div>
+
+    </div>
+  </div>
+</div>

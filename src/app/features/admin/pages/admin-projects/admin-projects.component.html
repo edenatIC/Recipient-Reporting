@@ -1,0 +1,102 @@
+<div class="px-8 py-8 max-w-[1400px] mx-auto w-full">
+  <!-- Page heading -->
+  <div class="mb-6">
+    <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">My Projects</h1>
+    <p class="mt-1 text-sm text-[#667085]">Manage Deliverables for submitted projects and leave comments</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 mb-6">
+    <!-- Status filter -->
+    <div class="relative">
+      <button
+        (click)="toggleStatus()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Status
+        @if (statusFilter() !== 'All') {
+          <span class="text-[#106636]">({{ statusFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (statusOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-40 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of statusOptions; track opt) {
+            <button
+              (click)="setStatusFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="statusFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Office filter -->
+    <div class="relative">
+      <button
+        (click)="toggleOffice()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        {{ officeFilter() }}
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (officeOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-64 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of officeOptions; track opt) {
+            <button
+              (click)="setOfficeFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="officeFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="border border-[#eaecf0] rounded-xl overflow-hidden">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-white border-b border-[#eaecf0]">
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Project Name</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Control Number</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Status</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Office</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredProjects(); track item.id; let even = $even) {
+          <tr
+            (click)="goToProject(item.id)"
+            class="border-b border-[#eaecf0] last:border-0 hover:bg-[#f9fafb] transition-colors cursor-pointer"
+            [class.bg-white]="!even"
+            [class.bg-[#fafafa]]="even"
+          >
+            <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.projectName }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.controlNumber }}</td>
+            <td class="px-5 py-4">
+              <span
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+                [style]="getBadgeStyle(item.status)"
+              >
+                <span class="w-1.5 h-1.5 rounded-full" [style]="getDotStyle(item.status)"></span>
+                {{ item.status }}
+              </span>
+            </td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.office }}</td>
+          </tr>
+        }
+
+        @if (filteredProjects().length === 0) {
+          <tr>
+            <td colspan="4" class="px-5 py-12 text-center text-sm text-[#667085]">
+              No projects match the selected filters.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

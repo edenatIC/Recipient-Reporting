@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(ng version:*)",
+      "Bash(npx @angular/cli@21 version)",
+      "Bash(npx @angular/cli@21 new recipient-reporting --directory . --routing=false --style=css --standalone=true --skip-git=true --skip-tests=true)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(npx ng:*)",
+      "Bash(curl -s http://localhost:4201)",
+      "Bash(kill %1)",
+      "Bash(grep -E \"\\\\.\\(html|ts\\)$\")"
+    ]
+  }
+}

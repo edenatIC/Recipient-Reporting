@@ -1,0 +1,273 @@
+<div class="px-8 py-8 max-w-[1400px] mx-auto w-full">
+  <!-- Page heading -->
+  <div class="mb-6">
+    <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ welcomeTitle() }}</h1>
+    <p class="mt-1 text-sm text-[#667085]">{{ welcomeSubtext() }}</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 mb-6">
+    <!-- Status filter -->
+    <div class="relative">
+      <button
+        (click)="toggleStatus()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Status
+        @if (statusFilter() !== 'All') {
+          <span class="text-[#106636]">({{ statusFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (statusOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-52 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of statusOptions; track opt) {
+            <button
+              (click)="setStatusFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="statusFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Project filter -->
+    <div class="relative">
+      <button
+        (click)="toggleProject()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        {{ projectFilter() }}
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (projectOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-72 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of projectOptions; track opt) {
+            <button
+              (click)="setProjectFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="projectFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Due Date filter -->
+    <div class="relative">
+      <button
+        (click)="toggleDueDate()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Due Date
+        @if (dueDateFilter() !== 'All') {
+          <span class="text-[#106636]">({{ dueDateFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (dueDateOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-44 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of dueDateOptions; track opt) {
+            <button
+              (click)="setDueDateFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="dueDateFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Date Submitted filter -->
+    <div class="relative">
+      <button
+        (click)="toggleDateSubmitted()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Date Submitted
+        @if (dateSubmittedFilter() !== 'All') {
+          <span class="text-[#106636]">({{ dateSubmittedFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (dateSubmittedOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-48 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of dateSubmittedOptions; track opt) {
+            <button
+              (click)="setDateSubmittedFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="dateSubmittedFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="border border-[#eaecf0] rounded-xl overflow-hidden">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-white border-b border-[#eaecf0]">
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Deliverable</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Project</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Due Date</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Date Submitted</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Status</th>
+          <th class="px-5 py-3.5"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredDeliverables(); track item.id; let even = $even) {
+          <tr
+            class="border-b border-[#eaecf0] last:border-0 hover:bg-[#f9fafb] transition-colors"
+            [class.bg-white]="!even"
+            [class.bg-[#fafafa]]="even"
+          >
+            <!-- Deliverable -->
+            <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.deliverable }}</td>
+
+            <!-- Project -->
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.project }}</td>
+
+            <!-- Due Date -->
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dueDate }}</td>
+
+            <!-- Date Submitted -->
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted ?? '—' }}</td>
+
+            <!-- Status -->
+            <td class="px-5 py-4">
+              <span
+                class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium"
+                [style]="getStatusBadgeStyle(item.status)"
+              >
+                {{ item.status }}
+              </span>
+            </td>
+
+            <!-- Action -->
+            <td class="px-5 py-4 text-right">
+              <button
+                (click)="onActionClick(item)"
+                class="w-8 h-8 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
+                [title]="isUploadStatus(item.status) ? 'Upload' : 'View'"
+              >
+                @if (isUploadStatus(item.status)) {
+                  <lucide-icon [img]="Upload" [size]="16" />
+                } @else {
+                  <lucide-icon [img]="Eye" [size]="16" />
+                }
+              </button>
+            </td>
+          </tr>
+        }
+
+        @if (filteredDeliverables().length === 0) {
+          <tr>
+            <td colspan="6" class="px-5 py-12 text-center text-sm text-[#667085]">
+              No deliverables match the selected filters.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Deliverable Review Panel -->
+@if (panelState() !== 'hidden' && selectedDeliverable(); as item) {
+  <app-deliverable-panel
+    [deliverable]="item"
+    [panelState]="panelState()"
+    (close)="onPanelClose()"
+  />
+}
+
+<!-- Upload Modal -->
+@if (uploadTarget()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center"
+    style="background: rgba(16, 24, 40, 0.5)"
+    (click)="closeModal()"
+  >
+    <div
+      class="bg-white rounded-2xl shadow-xl w-full max-w-[640px] mx-4"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="px-8 pt-10 pb-8">
+
+        <!-- Title + close -->
+        <div class="flex items-start justify-between mb-4">
+          <h2 class="text-[22px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Upload Deliverable</h2>
+          <button
+            (click)="closeModal()"
+            class="w-7 h-7 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
+          >
+            <lucide-icon [img]="X" [size]="16" />
+          </button>
+        </div>
+
+        <!-- Deliverable meta -->
+        <div class="mb-6">
+          <div class="flex items-center gap-10 mb-1.5">
+            <p class="text-sm text-[#667085]">Deliverable: {{ uploadTarget()!.deliverable }}</p>
+            <p class="text-sm text-[#667085]">Project: {{ uploadTarget()!.project }}</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-[#667085]">Deadline: {{ uploadTarget()!.dueDate }}</p>
+            <span
+              class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
+              [style]="getStatusBadgeStyle(uploadTarget()!.status)"
+            >{{ uploadTarget()!.status }}</span>
+          </div>
+        </div>
+
+        <!-- Drop zone -->
+        <label
+          class="flex flex-col items-center justify-center w-full cursor-pointer transition-colors"
+          style="border-radius: 12px; border-width: 1.5px; border-style: dashed; min-height: 280px; padding: 0 32px;"
+          [style.border-color]="isDragOver() ? '#106636' : '#c8d0da'"
+          [style.background]="isDragOver() ? '#f0faf4' : '#ffffff'"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave()"
+          (drop)="onDrop($event)"
+        >
+          <input type="file" class="hidden" (change)="onFileSelected($event)" />
+
+          @if (selectedFile()) {
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-[#e6f4ea] flex items-center justify-center">
+                <lucide-icon [img]="CloudUpload" [size]="20" style="color: #106636" />
+              </div>
+              <div>
+                <p class="text-sm font-medium text-[#101828]">{{ selectedFile()!.name }}</p>
+                <p class="text-xs text-[#667085] mt-0.5">{{ (selectedFile()!.size / 1024).toFixed(1) }} KB</p>
+              </div>
+            </div>
+          } @else {
+            <lucide-icon [img]="CloudUpload" [size]="44" style="color: #667085; margin-bottom: 20px;" />
+            <p style="font-size: 16px; font-weight: 600; color: #101828; margin-bottom: 6px;">Drag & drop your file here</p>
+            <p style="font-size: 14px; color: #667085; margin-bottom: 16px;">or <span style="color: #106636; font-weight: 600;">browse to upload</span></p>
+            <p style="font-size: 13px; color: #98a2b3;">PDF, DOCX, XLSX, or ZIP — max 25 MB</p>
+          }
+        </label>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-center gap-3 mt-8">
+
+          <button
+            (click)="submitUpload()"
+            class="px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors cursor-pointer"
+            [style]="selectedFile() ? { background: '#106636' } : { background: '#9cbfab', cursor: 'not-allowed' }"
+            [disabled]="!selectedFile()"
+          >
+            Upload File
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

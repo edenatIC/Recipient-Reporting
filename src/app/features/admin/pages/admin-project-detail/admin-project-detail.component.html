@@ -1,0 +1,139 @@
+<div class="px-8 py-8 max-w-[1400px] mx-auto w-full">
+
+  <!-- Back link -->
+  <a
+    routerLink="/admin/projects"
+    class="inline-flex items-center gap-1.5 text-sm text-[#1570ef] hover:text-[#175cd3] mb-6"
+  >
+    <lucide-icon [img]="ArrowLeft" [size]="16" />
+    Back to My Projects
+  </a>
+
+  <!-- Page heading -->
+  @if (project(); as proj) {
+    <div class="mb-6">
+      <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ proj.projectName }}</h1>
+      <p class="mt-1 text-sm text-[#667085]">Review and Manage Deliverables associated with that project.</p>
+    </div>
+  } @else {
+    <div class="mb-6">
+      <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Project Not Found</h1>
+    </div>
+  }
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 mb-6">
+    <!-- Status filter -->
+    <div class="relative">
+      <button
+        (click)="toggleStatus()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Status
+        @if (statusFilter() !== 'All') {
+          <span class="text-[#106636]">({{ statusFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (statusOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-52 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of statusOptions; track opt) {
+            <button
+              (click)="setStatusFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="statusFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Date Submitted filter -->
+    <div class="relative">
+      <button
+        (click)="toggleDateSubmitted()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Date Submitted
+        @if (dateSubmittedFilter() !== 'All') {
+          <span class="text-[#106636]">({{ dateSubmittedFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (dateSubmittedOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-52 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of dateSubmittedOptions; track opt) {
+            <button
+              (click)="setDateSubmittedFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="dateSubmittedFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="border border-[#eaecf0] rounded-xl overflow-hidden">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-white border-b border-[#eaecf0]">
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Deliverable</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Due Date</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Date Submitted</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Status</th>
+          <th class="px-5 py-3.5"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredDeliverables(); track item.id; let even = $even) {
+          <tr
+            class="border-b border-[#eaecf0] last:border-0 hover:bg-[#f9fafb] transition-colors"
+            [class.bg-white]="!even"
+            [class.bg-[#fafafa]]="even"
+          >
+            <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.deliverable }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dueDate }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted ?? '—' }}</td>
+            <td class="px-5 py-4">
+              <span
+                class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium"
+                [style]="getStatusBadgeStyle(item.status)"
+              >{{ item.status }}</span>
+            </td>
+            <td class="px-5 py-4 text-right">
+              @if (hasSubmission(item.status)) {
+                <button
+                  (click)="onViewClick(item)"
+                  class="w-8 h-8 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
+                  title="Review"
+                >
+                  <lucide-icon [img]="Eye" [size]="16" />
+                </button>
+              }
+            </td>
+          </tr>
+        }
+
+        @if (filteredDeliverables().length === 0) {
+          <tr>
+            <td colspan="5" class="px-5 py-12 text-center text-sm text-[#667085]">
+              No deliverables match the selected filters.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Admin Review Panel -->
+@if (panelState() !== 'hidden' && panelDeliverable(); as item) {
+  <app-admin-panel
+    [deliverable]="item"
+    [panelState]="panelState()"
+    (close)="onPanelClose()"
+    (panelStateChange)="onPanelStateChange($event)"
+  />
+}
