@@ -39,7 +39,7 @@ export class DeliverablePanelComponent implements OnInit {
       case 'Overdue':            return 'background:#fee2e2; color:#991b1b';
       case 'Due Soon':           return 'background:#ffedd5; color:#9a3412';
       case 'Not Submitted':      return 'background:#dbeafe; color:#1e40af';
-      case 'Need Review':        return 'background:#f3e8ff; color:#6b21a8';
+      case 'Needs Review':       return 'background:#f3e8ff; color:#6b21a8';
     }
   }
 }

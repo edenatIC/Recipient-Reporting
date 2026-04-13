@@ -70,7 +70,7 @@ export class DashboardComponent {
     'Overdue': 0,
     'Due Soon': 1,
     'Needs Resubmission': 2,
-    'Need Review': 3,
+    'Needs Review': 3,
     'Not Submitted': 4,
     'Submitted': 5,
   };
@@ -138,7 +138,7 @@ export class DashboardComponent {
       case 'Overdue':            return { background: '#fee2e2', color: '#991b1b' };
       case 'Due Soon':           return { background: '#ffedd5', color: '#9a3412' };
       case 'Not Submitted':      return { background: '#dbeafe', color: '#1e40af' };
-      case 'Need Review':        return { background: '#f3e8ff', color: '#6b21a8' };
+      case 'Needs Review':        return { background: '#f3e8ff', color: '#6b21a8' };
     }
   }
 

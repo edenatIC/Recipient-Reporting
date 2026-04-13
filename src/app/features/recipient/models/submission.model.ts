@@ -4,7 +4,7 @@ export type DeliverableStatus =
   | 'Overdue'
   | 'Due Soon'
   | 'Not Submitted'
-  | 'Need Review';
+  | 'Needs Review';
 
 export interface SubmissionHistoryEntry {
   version: number;
