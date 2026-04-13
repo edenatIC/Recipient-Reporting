@@ -1,5 +1,5 @@
 import { Component, signal, input, output, OnInit } from '@angular/core';
-import { LucideAngularModule, X } from 'lucide-angular';
+import { LucideAngularModule, X, ExternalLink } from 'lucide-angular';
 import { Deliverable, DeliverableStatus } from '../../models/submission.model';
 
 export type PanelState = 'hidden' | 'normal';
@@ -13,6 +13,7 @@ type PanelTab = 'summary' | 'history';
 })
 export class DeliverablePanelComponent implements OnInit {
   readonly X = X;
+  readonly ExternalLink = ExternalLink;
 
   deliverable = input.required<Deliverable>();
   panelState = input.required<PanelState>();
