@@ -1,8 +1,9 @@
 import { Component, signal, input, output, OnInit } from '@angular/core';
-import { LucideAngularModule, X, ChevronsLeft, ChevronsRight } from 'lucide-angular';
-import { DeliverableStatus } from '../../../recipient/models/submission.model';
+import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink } from 'lucide-angular';
+import { DeliverableStatus, SubmissionHistoryEntry } from '../../../recipient/models/submission.model';
 
 export type AdminPanelState = 'hidden' | 'normal' | 'expanded';
+type PanelTab = 'summary' | 'history';
 
 export interface AdminPanelDeliverable {
   deliverable: string;
@@ -10,6 +11,9 @@ export interface AdminPanelDeliverable {
   dueDate: string;
   dateSubmitted: string | null;
   status: DeliverableStatus;
+  aiSummary?: string;
+  fileUrl?: string;
+  submissionHistory?: SubmissionHistoryEntry[];
 }
 
 @Component({
@@ -22,22 +26,49 @@ export class AdminPanelComponent implements OnInit {
   readonly X = X;
   readonly ChevronsLeft = ChevronsLeft;
   readonly ChevronsRight = ChevronsRight;
+  readonly ExternalLink = ExternalLink;
 
   deliverable = input.required<AdminPanelDeliverable>();
   panelState = input.required<AdminPanelState>();
   close = output<void>();
   panelStateChange = output<AdminPanelState>();
+  approve = output<void>();
+  reject = output<string>();
 
   panelAnimating = signal(true);
+  activeTab = signal<PanelTab>('summary');
+  showRejectModal = signal(false);
+  rejectComment = signal('');
 
   ngOnInit() {
     setTimeout(() => this.panelAnimating.set(false), 400);
+    this.activeTab.set('summary');
   }
 
   onToggleExpand() {
     this.panelStateChange.emit(
       this.panelState() === 'expanded' ? 'normal' : 'expanded'
     );
+  }
+
+  setTab(tab: PanelTab) {
+    this.activeTab.set(tab);
+  }
+
+  openRejectModal() {
+    this.rejectComment.set('');
+    this.showRejectModal.set(true);
+  }
+
+  cancelReject() {
+    this.showRejectModal.set(false);
+    this.rejectComment.set('');
+  }
+
+  submitReject() {
+    this.reject.emit(this.rejectComment());
+    this.showRejectModal.set(false);
+    this.rejectComment.set('');
   }
 
   getStatusBadgeStyle(status: DeliverableStatus): Record<string, string> {
@@ -47,7 +78,7 @@ export class AdminPanelComponent implements OnInit {
       case 'Overdue':            return { background: '#fee2e2', color: '#991b1b' };
       case 'Due Soon':           return { background: '#ffedd5', color: '#9a3412' };
       case 'Not Submitted':      return { background: '#dbeafe', color: '#1e40af' };
-      case 'Need Review':        return { background: '#f3e8ff', color: '#6b21a8' };
+      case 'Needs Review':       return { background: '#f3e8ff', color: '#6b21a8' };
     }
   }
 }

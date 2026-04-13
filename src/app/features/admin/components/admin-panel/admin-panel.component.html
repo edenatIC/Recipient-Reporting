@@ -6,7 +6,7 @@
   style="transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1), width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"
 >
 
-  <!-- Header: expand chevron left, close right -->
+  <!-- Header -->
   <div class="px-6 py-5 shrink-0" style="display: flex; align-items: center; justify-content: space-between;">
     <button
       (click)="onToggleExpand()"
@@ -28,8 +28,8 @@
     </button>
   </div>
 
-  <!-- Content -->
-  <div class="flex-1 overflow-y-auto px-6 pb-6">
+  <!-- Scrollable content -->
+  <div class="flex-1 overflow-y-auto px-6 pb-6 min-h-0">
 
     <!-- Deliverable name -->
     <div class="mb-2">
@@ -57,20 +57,153 @@
       </span>
     </div>
 
+    <!-- ── NEEDS REVIEW ── -->
+    @if (deliverable().status === 'Needs Review') {
 
-    <!-- Placeholder sections -->
-    <div class="space-y-6">
+      <!-- Tab row -->
+      <div class="flex items-baseline gap-6 mb-5">
+        <button
+          (click)="setTab('summary')"
+          class="text-[15px] leading-[24px] pb-0.5 cursor-pointer border-0 bg-transparent p-0"
+          style="font-family: inherit"
+          [style.color]="activeTab() === 'summary' ? '#101828' : '#667085'"
+          [style.font-weight]="activeTab() === 'summary' ? '600' : '400'"
+          [style.text-decoration]="activeTab() === 'summary' ? 'underline' : 'none'"
+        >Summary of Latest Submission</button>
+        <button
+          (click)="setTab('history')"
+          class="text-[15px] leading-[24px] pb-0.5 cursor-pointer border-0 bg-transparent p-0"
+          style="font-family: inherit"
+          [style.color]="activeTab() === 'history' ? '#101828' : '#667085'"
+          [style.font-weight]="activeTab() === 'history' ? '600' : '400'"
+          [style.text-decoration]="activeTab() === 'history' ? 'underline' : 'none'"
+        >Submission History</button>
+      </div>
 
-      <div class="space-y-2">
-        <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;"> AI Summary </p>
-        <p class="text-[14px] leading-[22px] text-[#475467]">This document is a completed Project Status Report for Q1 2026, submitted by the Operations team. All required form fields have been filled in, including project name, reporting period, team lead, budget allocation, and milestone tracking sections. The signature and date fields on the final page are also properly completed. However, the "Risk Mitigation Notes" field on page 3 appears to contain only a placeholder dash rather than a substantive entry, which may warrant a follow-up with the submitting team.
-</p>
-       <p class="text-[14px] leading-[22px] text-[#475467]">
-Content-wise, the report outlines progress across three key workstreams: vendor onboarding, internal tooling upgrades, and compliance training rollout. The vendor onboarding track is reported at 85% completion with two contracts still pending legal review, while the tooling upgrades are flagged as behind schedule due to a staffing gap in engineering. Overall, the deliverable is well-structured and largely complete, though the missing risk notes and a lack of supporting data for the revised timeline estimates are areas that should be addressed before final sign-off.</p>
+      <!-- Summary tab -->
+      @if (activeTab() === 'summary') {
+        <div class="space-y-3">
+          <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">AI Summary</p>
+          @if (deliverable().aiSummary) {
+            <p class="text-[14px] leading-[22px] text-[#475467]">{{ deliverable().aiSummary }}</p>
+          }
+          <a
+            [href]="deliverable().fileUrl ?? '#'"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-[14px] font-medium text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            <span class="underline">View Latest Submission</span>
+            <lucide-angular [img]="ExternalLink" class="w-2.5 h-2.5 shrink-0" />
+          </a>
+        </div>
+      }
+
+      <!-- History tab -->
+      @if (activeTab() === 'history') {
+        <div class="space-y-7">
+          @for (entry of deliverable().submissionHistory; track entry.version) {
+            <div>
+              <div class="flex items-baseline gap-5 mb-3">
+                <span class="text-[14px] font-medium text-[#344054] w-6 shrink-0">V{{ entry.version }}</span>
+                <a
+                  [href]="entry.fileUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-[14px] font-medium text-blue-600 underline hover:text-blue-800 transition-colors"
+                >{{ entry.fileName }}</a>
+                <span class="text-[14px] text-[#667085] ml-auto shrink-0">{{ entry.date }}</span>
+              </div>
+              <p class="text-[14px] italic leading-[26px] text-[#475467]">{{ entry.comment }}</p>
+            </div>
+          }
+        </div>
+      }
+
+    <!-- ── OTHER STATUSES ── -->
+    } @else {
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 1</p>
+          <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+        </div>
+        <div class="space-y-2">
+          <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 2</p>
+          <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+        </div>
+        <div class="space-y-2">
+          <p class="font-bold text-[14px] text-[#344054] underline" style="font-family: 'Figtree', sans-serif;">Section 3</p>
+          <p class="text-[14px] leading-[22px] text-[#475467]">Details will go here.</p>
+        </div>
+      </div>
+    }
+
+  </div>
+
+  <!-- Sticky footer: Reject + Approve (Needs Review only) -->
+  @if (deliverable().status === 'Needs Review') {
+    <div class="shrink-0 px-6 py-4 border-t border-[#eaecf0] bg-white" style="display: flex; gap: 12px;">
+      <button
+        (click)="openRejectModal()"
+        class="flex-1 py-3.5 rounded-xl text-[15px] font-semibold border border-[#d0d5dd] text-[#344054] hover:bg-[#f9fafb] transition-colors cursor-pointer bg-white"
+        style="font-family: inherit"
+      >
+        Reject
+      </button>
+      <button
+        (click)="approve.emit()"
+        class="flex-1 py-3.5 rounded-xl text-[15px] font-semibold text-white transition-colors cursor-pointer"
+        style="background: #106636; font-family: inherit"
+        onmouseover="this.style.background='#0d5229'"
+        onmouseout="this.style.background='#106636'"
+      >
+        Approve
+      </button>
+    </div>
+  }
+
 </div>
 
-
-
+<!-- Rejection modal -->
+@if (showRejectModal()) {
+  <div
+    class="fixed inset-0 z-[100] flex items-center justify-center"
+    style="background: rgba(0,0,0,0.4);"
+    (click)="cancelReject()"
+  >
+    <div
+      class="bg-white rounded-2xl shadow-xl w-full mx-4 p-6"
+      style="max-width: 480px;"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 class="text-[20px] font-bold text-[#101828] mb-2" style="font-family: 'Figtree', sans-serif;">Reject Submission</h2>
+      <p class="text-[14px] text-[#475467] mb-4">Please provide a reason for rejecting this submission. This comment will be shared with the recipient.</p>
+      <textarea
+        class="w-full border border-[#d0d5dd] rounded-lg px-3.5 py-2.5 text-sm text-[#101828] outline-none transition-colors"
+        style="resize: none; font-family: inherit;"
+        rows="5"
+        placeholder="Enter rejection reason..."
+        [value]="rejectComment()"
+        (input)="rejectComment.set($any($event.target).value)"
+      ></textarea>
+      <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <button
+          (click)="cancelReject()"
+          class="flex-1 py-2.5 rounded-lg text-sm font-semibold border border-[#d0d5dd] text-[#344054] hover:bg-[#f9fafb] transition-colors cursor-pointer bg-white"
+          style="font-family: inherit"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="submitReject()"
+          class="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer"
+          style="background: #b91c1c; font-family: inherit"
+          onmouseover="this.style.background='#991b1b'"
+          onmouseout="this.style.background='#b91c1c'"
+        >
+          Submit Rejection
+        </button>
+      </div>
     </div>
   </div>
-</div>
+}
