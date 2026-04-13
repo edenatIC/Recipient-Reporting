@@ -36,6 +36,7 @@ export class DashboardComponent {
   );
 
   uploadTarget = signal<Deliverable | null>(null);
+  isReupload = signal(false);
   selectedFile = signal<File | null>(null);
   isDragOver = signal(false);
 
@@ -161,8 +162,15 @@ export class DashboardComponent {
   }
 
 
+  onReupload() {
+    this.uploadTarget.set(this.panelDeliverable());
+    this.isReupload.set(true);
+    this.selectedFile.set(null);
+  }
+
   closeModal() {
     this.uploadTarget.set(null);
+    this.isReupload.set(false);
     this.selectedFile.set(null);
     this.isDragOver.set(false);
   }
