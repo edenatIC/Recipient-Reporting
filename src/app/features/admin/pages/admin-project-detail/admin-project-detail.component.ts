@@ -1,38 +1,61 @@
 import { Component, computed, signal, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule, ArrowLeft, ChevronDown, Eye } from 'lucide-angular';
-import { DeliverableStatus } from '../../../recipient/models/submission.model';
 import { AdminPanelComponent, AdminPanelState, AdminPanelDeliverable } from '../../components/admin-panel/admin-panel.component';
 
 interface ProjectDeliverable {
   id: string;
   deliverable: string;
   dueDate: string;
-  dateSubmitted: string | null;
-  status: DeliverableStatus;
-  aiSummary?: string;
-  fileUrl?: string;
-  submissionHistory?: { version: number; fileName: string; fileUrl: string; date: string; comment: string }[];
+  dateSubmitted: string;
+  aiSummary: string;
+  fileUrl: string;
+  submissionHistory: { version: number; fileName: string; fileUrl: string; date: string; comment: string }[];
 }
 
-const mockAiSummary = 'This document is a completed Project Status Report submitted by the Operations team. All required form fields have been filled in, including project name, reporting period, team lead, budget allocation, and milestone tracking sections. The signature and date fields on the final page are also properly completed. However, the "Risk Mitigation Notes" field on page 3 appears to contain only a placeholder dash rather than a substantive entry, which may warrant a follow-up with the submitting team.\n\nContent-wise, the report outlines progress across three key workstreams: vendor onboarding, internal tooling upgrades, and compliance training rollout. The vendor onboarding track is reported at 85% completion with two contracts still pending legal review, while the tooling upgrades are flagged as behind schedule due to a staffing gap in engineering. Overall, the deliverable is well-structured and largely complete, though the missing risk notes and a lack of supporting data for the revised timeline estimates are areas that should be addressed before final sign-off.';
+// ── AI Summaries ────────────────────────────────────────────────────────────
 
-const mockSubmissionHistory = [
-  {
-    version: 2,
-    fileName: 'Deliverable_Submitted_v2.pdf',
-    fileUrl: '#',
-    date: '04/11/2026',
-    comment: 'Revised submission addressing reviewer comments on the budget allocation section and updated milestone tracking data.',
-  },
-  {
-    version: 1,
-    fileName: 'Deliverable_Submitted_v1.pdf',
-    fileUrl: '#',
-    date: '03/28/2026',
-    comment: 'Initial submission of the deliverable for review.',
-  },
+const summaryProgressReport = 'This Q1 Progress Report covers project activities from January through March 2026. All required sections are complete, including milestone status, staffing updates, and budget utilization. The report indicates that two of the four planned milestones have been achieved on schedule, while a third is running approximately two weeks behind due to permitting delays.\n\nThe narrative sections are well-written and supported by data. One gap identified: the risk register on page 4 lists three open risks without assigned mitigation owners. Recommend requesting clarification on ownership before final approval.';
+
+const summaryOutreachSummary = 'The Community Outreach Summary documents engagement activities conducted between February and March 2026 across five community sites. Attendance figures, feedback forms, and sign-in sheets are referenced but only partially included as attachments — two of the five site records appear to be missing.\n\nThe written summary is thorough and reflects genuine community participation. The submitter notes scheduling challenges that affected two planned sessions, which were rescheduled and completed. Overall the deliverable is largely complete; a follow-up on the missing site attachments is advised before approval.';
+
+const summaryComplianceChecklist = 'This Safety Compliance Checklist covers 42 inspection items across equipment handling, personnel certification, and site access protocols. All items are marked as compliant, with signatures from the site lead and safety officer on each page.\n\nThree items in Section C (emergency egress) reference a separate Site Safety Plan that was not included with this submission. The checklist itself is fully filled out and appears accurate based on the project scope. Recommend requesting the referenced Safety Plan as a supporting document before approving.';
+
+const summaryEquipmentLog = 'The Quarterly Equipment Log records all equipment procurement, deployment, and maintenance events for Q1 2026. A total of 23 line items are logged with serial numbers, acquisition dates, and responsible personnel. The log format matches the required template.\n\nOne inconsistency was flagged: equipment item #17 shows a deployment date that precedes its recorded acquisition date by four days, which may indicate a data entry error. All other entries appear consistent and well-documented. Minor clarification on item #17 is recommended before final sign-off.';
+
+const summaryAssessmentReport = 'This Site Assessment Report presents findings from field surveys conducted in late March 2026. The report includes topographic data, soil classification results, and environmental baseline readings. Supporting maps and photo documentation are included as appendices.\n\nThe methodology section is thorough and the findings are clearly presented. The executive summary, however, omits reference to the two sites where surveys were paused due to weather — these are covered later in the report but the omission in the summary could cause confusion for reviewers unfamiliar with the project. Flagging for minor revision or a clarifying note.';
+
+const summaryStakeholderSummary = 'The Stakeholder Engagement Summary covers formal and informal engagement activities for Q1 2026, including two public meetings, four bilateral conversations with agency partners, and one technical working group session. Meeting minutes and attendance records are appended.\n\nThe document is well-organized and the engagement activities described align with the approved project engagement plan. One item to note: the summary references commitments made during the February 12 bilateral that are not yet reflected in the project schedule. Recommend confirming these are tracked before approval.';
+
+const summaryBaselineStudy = 'This Energy Output Baseline Study establishes pre-project energy generation and consumption baselines for the project site. The methodology follows the approved measurement and verification protocol, and all data collection periods are accounted for.\n\nThe statistical analysis in Section 3 is sound, though the confidence intervals reported are notably wide due to the short data collection window (6 weeks). The report acknowledges this limitation and recommends a supplementary data collection phase. The deliverable is complete and the limitation is appropriately disclosed — no blocking issues identified.';
+
+const summaryTechReport = 'The submitted Technical Report covers system design specifications, testing protocols, and integration results for the pilot phase. The report is 48 pages and includes annotated diagrams and test output tables.\n\nAll required sections are present. A few figures appear to be low-resolution exports and may not reproduce well in print, but the underlying data is clearly communicated. Section 5 references an appendix that is not included in this submission — this may be an oversight or the appendix may have been inadvertently excluded. Recommend confirming with the submitter before approving.';
+
+const summaryBudgetReport = 'This Budget Reconciliation Report documents Q1 expenditures against the approved budget. Total spend for the quarter is reported at $1.24M against a budget of $1.31M, representing a favorable variance of approximately 5.3%.\n\nAll line items are supported by transaction references, and the variance is explained in the narrative. Two budget reallocations made during the quarter are disclosed and appear consistent with the approved modification submitted in February. The report is thorough and well-supported — no significant issues identified.';
+
+// ── Submission Histories ─────────────────────────────────────────────────────
+
+const historyV2Only = [
+  { version: 2, fileName: 'Deliverable_v2.pdf', fileUrl: '#', date: '04/11/2026', comment: 'Revised submission incorporating reviewer feedback on the milestone tracking table and updated staffing numbers.' },
+  { version: 1, fileName: 'Deliverable_v1.pdf', fileUrl: '#', date: '03/28/2026', comment: 'Initial submission.' },
 ];
+
+const historyV1Only = [
+  { version: 1, fileName: 'Deliverable_v1.pdf', fileUrl: '#', date: '03/30/2026', comment: 'First and only submission. No prior versions.' },
+];
+
+const historyV3 = [
+  { version: 3, fileName: 'Deliverable_v3.pdf', fileUrl: '#', date: '04/09/2026', comment: 'Third submission. Addressed missing site attachments noted in second review cycle.' },
+  { version: 2, fileName: 'Deliverable_v2.pdf', fileUrl: '#', date: '03/22/2026', comment: 'Resubmission following initial review. Updated risk register and added two missing appendices.' },
+  { version: 1, fileName: 'Deliverable_v1.pdf', fileUrl: '#', date: '03/10/2026', comment: 'Initial submission.' },
+];
+
+const historyV2B = [
+  { version: 2, fileName: 'Deliverable_v2.pdf', fileUrl: '#', date: '04/14/2026', comment: 'Corrected data entry error on item #17 and added clarifying note in the summary section.' },
+  { version: 1, fileName: 'Deliverable_v1.pdf', fileUrl: '#', date: '04/02/2026', comment: 'Initial submission.' },
+];
+
+// ── Mock Projects ─────────────────────────────────────────────────────────────
 
 interface AdminProjectSummary {
   id: string;
@@ -56,67 +79,69 @@ const mockProjects: AdminProjectSummary[] = [
   { id: '12', projectName: 'Smart Grid Analytics Platform',      controlNumber: 'DE-0012-2026', office: 'Office of Electricity' },
 ];
 
+// ── Mock Deliverables ─────────────────────────────────────────────────────────
+
 const mockDeliverablesByProject: Record<string, ProjectDeliverable[]> = {
   '1': [
-    { id: '1-1', deliverable: 'Q1 Progress Report',         dueDate: '03/31/2026', dateSubmitted: '03/28/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '1-2', deliverable: 'Community Outreach Summary', dueDate: '04/01/2026', dateSubmitted: '03/30/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '1-3', deliverable: 'Energy Output Baseline Study', dueDate: '04/18/2026', dateSubmitted: '04/16/2026', status: 'Submitted' },
-    { id: '1-4', deliverable: 'Site Safety Assessment',     dueDate: '04/25/2026', dateSubmitted: null,         status: 'Not Submitted' },
-    { id: '1-5', deliverable: 'Financial Expenditure Report', dueDate: '03/15/2026', dateSubmitted: '03/20/2026', status: 'Needs Resubmission' },
+    { id: '1-1', deliverable: 'Q1 Progress Report',           dueDate: '03/31/2026', dateSubmitted: '03/28/2026', aiSummary: summaryProgressReport,   fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '1-2', deliverable: 'Community Outreach Summary',   dueDate: '04/01/2026', dateSubmitted: '03/30/2026', aiSummary: summaryOutreachSummary,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '1-3', deliverable: 'Energy Output Baseline Study', dueDate: '04/18/2026', dateSubmitted: '04/16/2026', aiSummary: summaryBaselineStudy,     fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '1-4', deliverable: 'Site Safety Assessment',       dueDate: '04/25/2026', dateSubmitted: '04/22/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '1-5', deliverable: 'Financial Expenditure Report', dueDate: '03/15/2026', dateSubmitted: '03/20/2026', aiSummary: summaryBudgetReport,      fileUrl: '#', submissionHistory: historyV3    },
   ],
   '2': [
-    { id: '2-1', deliverable: 'Quarterly Equipment Log',        dueDate: '03/25/2026', dateSubmitted: '03/24/2026', status: 'Submitted' },
-    { id: '2-2', deliverable: 'Stakeholder Engagement Summary', dueDate: '04/12/2026', dateSubmitted: '04/11/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '2-3', deliverable: 'Environmental Impact Report',    dueDate: '04/10/2026', dateSubmitted: null,         status: 'Due Soon' },
-    { id: '2-4', deliverable: 'Turbine Performance Metrics',   dueDate: '03/20/2026', dateSubmitted: null,         status: 'Overdue' },
+    { id: '2-1', deliverable: 'Quarterly Equipment Log',        dueDate: '03/25/2026', dateSubmitted: '03/24/2026', aiSummary: summaryEquipmentLog,     fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '2-2', deliverable: 'Stakeholder Engagement Summary', dueDate: '04/12/2026', dateSubmitted: '04/11/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '2-3', deliverable: 'Environmental Impact Report',    dueDate: '04/10/2026', dateSubmitted: '04/08/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '2-4', deliverable: 'Turbine Performance Metrics',   dueDate: '03/20/2026', dateSubmitted: '03/19/2026', aiSummary: summaryBaselineStudy,     fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '3': [
-    { id: '3-1', deliverable: 'Safety Compliance Checklist',  dueDate: '04/10/2026', dateSubmitted: '04/08/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '3-2', deliverable: 'Site Assessment Report',       dueDate: '04/05/2026', dateSubmitted: '04/04/2026', status: 'Submitted' },
-    { id: '3-3', deliverable: 'Grid Upgrade Technical Specs', dueDate: '04/20/2026', dateSubmitted: null,         status: 'Not Submitted' },
-    { id: '3-4', deliverable: 'Q1 Budget Reconciliation',     dueDate: '03/31/2026', dateSubmitted: '03/29/2026', status: 'Needs Resubmission' },
+    { id: '3-1', deliverable: 'Safety Compliance Checklist',  dueDate: '04/10/2026', dateSubmitted: '04/08/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV3    },
+    { id: '3-2', deliverable: 'Site Assessment Report',       dueDate: '04/05/2026', dateSubmitted: '04/04/2026', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '3-3', deliverable: 'Grid Upgrade Technical Specs', dueDate: '04/20/2026', dateSubmitted: '04/18/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '3-4', deliverable: 'Q1 Budget Reconciliation',     dueDate: '03/31/2026', dateSubmitted: '03/29/2026', aiSummary: summaryBudgetReport,       fileUrl: '#', submissionHistory: historyV2B   },
   ],
   '4': [
-    { id: '4-1', deliverable: 'Coastal Survey Final Report',  dueDate: '02/28/2026', dateSubmitted: '02/25/2026', status: 'Submitted' },
-    { id: '4-2', deliverable: 'Resilience Framework Document', dueDate: '03/15/2026', dateSubmitted: '03/12/2026', status: 'Submitted' },
+    { id: '4-1', deliverable: 'Coastal Survey Final Report',    dueDate: '02/28/2026', dateSubmitted: '02/25/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '4-2', deliverable: 'Resilience Framework Document',  dueDate: '03/15/2026', dateSubmitted: '03/12/2026', aiSummary: summaryTechReport,        fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '5': [
-    { id: '5-1', deliverable: 'Battery Cycle Testing Report', dueDate: '04/15/2026', dateSubmitted: '04/14/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '5-2', deliverable: 'Pilot Site Installation Log',  dueDate: '04/20/2026', dateSubmitted: null,         status: 'Due Soon' },
-    { id: '5-3', deliverable: 'Vendor Agreement Summary',     dueDate: '03/28/2026', dateSubmitted: '03/27/2026', status: 'Submitted' },
+    { id: '5-1', deliverable: 'Battery Cycle Testing Report', dueDate: '04/15/2026', dateSubmitted: '04/14/2026', aiSummary: summaryTechReport,        fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '5-2', deliverable: 'Pilot Site Installation Log',  dueDate: '04/20/2026', dateSubmitted: '04/17/2026', aiSummary: summaryEquipmentLog,      fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '5-3', deliverable: 'Vendor Agreement Summary',     dueDate: '03/28/2026', dateSubmitted: '03/27/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '6': [
-    { id: '6-1', deliverable: 'Rural Access Feasibility Study', dueDate: '02/20/2026', dateSubmitted: '02/18/2026', status: 'Submitted' },
-    { id: '6-2', deliverable: 'Community Needs Assessment',    dueDate: '03/10/2026', dateSubmitted: '03/08/2026', status: 'Submitted' },
+    { id: '6-1', deliverable: 'Rural Access Feasibility Study', dueDate: '02/20/2026', dateSubmitted: '02/18/2026', aiSummary: summaryBaselineStudy,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '6-2', deliverable: 'Community Needs Assessment',     dueDate: '03/10/2026', dateSubmitted: '03/08/2026', aiSummary: summaryOutreachSummary,  fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '7': [
-    { id: '7-1', deliverable: 'Fuel Cell Prototype Report',    dueDate: '04/08/2026', dateSubmitted: '04/07/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '7-2', deliverable: 'Lab Safety Compliance Form',    dueDate: '04/15/2026', dateSubmitted: null,         status: 'Not Submitted' },
-    { id: '7-3', deliverable: 'Q1 Research Summary',           dueDate: '03/31/2026', dateSubmitted: '04/02/2026', status: 'Needs Resubmission' },
+    { id: '7-1', deliverable: 'Fuel Cell Prototype Report', dueDate: '04/08/2026', dateSubmitted: '04/07/2026', aiSummary: summaryTechReport,      fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '7-2', deliverable: 'Lab Safety Compliance Form', dueDate: '04/15/2026', dateSubmitted: '04/13/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '7-3', deliverable: 'Q1 Research Summary',        dueDate: '03/31/2026', dateSubmitted: '04/02/2026', aiSummary: summaryProgressReport,  fileUrl: '#', submissionHistory: historyV3    },
   ],
   '8': [
-    { id: '8-1', deliverable: 'Carbon Capture Efficiency Report', dueDate: '02/15/2026', dateSubmitted: '02/12/2026', status: 'Submitted' },
-    { id: '8-2', deliverable: 'Site Decommission Plan',           dueDate: '03/01/2026', dateSubmitted: '02/28/2026', status: 'Submitted' },
+    { id: '8-1', deliverable: 'Carbon Capture Efficiency Report', dueDate: '02/15/2026', dateSubmitted: '02/12/2026', aiSummary: summaryBaselineStudy,    fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '8-2', deliverable: 'Site Decommission Plan',           dueDate: '03/01/2026', dateSubmitted: '02/28/2026', aiSummary: summaryAssessmentReport, fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '9': [
-    { id: '9-1', deliverable: 'Microreactor Design Review',  dueDate: '04/12/2026', dateSubmitted: '04/10/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '9-2', deliverable: 'Regulatory Compliance Brief', dueDate: '04/22/2026', dateSubmitted: null,         status: 'Due Soon' },
-    { id: '9-3', deliverable: 'Q1 Safety Incident Log',      dueDate: '03/31/2026', dateSubmitted: '03/30/2026', status: 'Submitted' },
+    { id: '9-1', deliverable: 'Microreactor Design Review',  dueDate: '04/12/2026', dateSubmitted: '04/10/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '9-2', deliverable: 'Regulatory Compliance Brief', dueDate: '04/22/2026', dateSubmitted: '04/20/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '9-3', deliverable: 'Q1 Safety Incident Log',      dueDate: '03/31/2026', dateSubmitted: '03/30/2026', aiSummary: summaryProgressReport,     fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '10': [
-    { id: '10-1', deliverable: 'Charging Station Site Plan',   dueDate: '04/10/2026', dateSubmitted: '04/09/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '10-2', deliverable: 'Contractor Selection Report',  dueDate: '04/18/2026', dateSubmitted: null,         status: 'Not Submitted' },
-    { id: '10-3', deliverable: 'Community Engagement Log',     dueDate: '03/25/2026', dateSubmitted: '03/22/2026', status: 'Submitted' },
+    { id: '10-1', deliverable: 'Charging Station Site Plan',  dueDate: '04/10/2026', dateSubmitted: '04/09/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '10-2', deliverable: 'Contractor Selection Report', dueDate: '04/18/2026', dateSubmitted: '04/15/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV3    },
+    { id: '10-3', deliverable: 'Community Engagement Log',    dueDate: '03/25/2026', dateSubmitted: '03/22/2026', aiSummary: summaryOutreachSummary,    fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '11': [
-    { id: '11-1', deliverable: 'Offshore Survey Final Report', dueDate: '02/10/2026', dateSubmitted: '02/08/2026', status: 'Submitted' },
-    { id: '11-2', deliverable: 'Environmental Baseline Study', dueDate: '03/05/2026', dateSubmitted: '03/03/2026', status: 'Submitted' },
+    { id: '11-1', deliverable: 'Offshore Survey Final Report', dueDate: '02/10/2026', dateSubmitted: '02/08/2026', aiSummary: summaryAssessmentReport, fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '11-2', deliverable: 'Environmental Baseline Study', dueDate: '03/05/2026', dateSubmitted: '03/03/2026', aiSummary: summaryBaselineStudy,    fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '12': [
-    { id: '12-1', deliverable: 'Platform Architecture Document', dueDate: '04/14/2026', dateSubmitted: '04/13/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-    { id: '12-2', deliverable: 'Data Security Assessment',      dueDate: '04/20/2026', dateSubmitted: null,         status: 'Due Soon' },
-    { id: '12-3', deliverable: 'API Integration Test Results',  dueDate: '03/28/2026', dateSubmitted: '03/25/2026', status: 'Needs Resubmission' },
-    { id: '12-4', deliverable: 'Q1 Milestone Summary',          dueDate: '03/31/2026', dateSubmitted: '03/30/2026', status: 'Submitted' },
+    { id: '12-1', deliverable: 'Platform Architecture Document', dueDate: '04/14/2026', dateSubmitted: '04/13/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '12-2', deliverable: 'Data Security Assessment',       dueDate: '04/20/2026', dateSubmitted: '04/18/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '12-3', deliverable: 'API Integration Test Results',   dueDate: '03/28/2026', dateSubmitted: '03/25/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV3    },
+    { id: '12-4', deliverable: 'Q1 Milestone Summary',           dueDate: '03/31/2026', dateSubmitted: '03/30/2026', aiSummary: summaryProgressReport,     fileUrl: '#', submissionHistory: historyV2Only },
   ],
 };
 
@@ -133,14 +158,9 @@ export class AdminProjectDetailComponent {
   readonly ChevronDown = ChevronDown;
   readonly Eye = Eye;
 
-  readonly statusOptions: ('All' | DeliverableStatus)[] = [
-    'All', 'Needs Review', 'Submitted', 'Needs Resubmission', 'Overdue', 'Due Soon', 'Not Submitted',
-  ];
-  readonly dateSubmittedOptions = ['All', 'This Week', 'This Month', 'Not Yet Submitted'];
+  readonly dateSubmittedOptions = ['All', 'This Week', 'This Month'];
 
-  statusFilter = signal<'All' | DeliverableStatus>('All');
   dateSubmittedFilter = signal<string>('All');
-  statusOpen = signal(false);
   dateSubmittedOpen = signal(false);
 
   project = computed(() => {
@@ -150,23 +170,10 @@ export class AdminProjectDetailComponent {
 
   filteredDeliverables = computed(() => {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
-    let items = [...(mockDeliverablesByProject[id] ?? [])];
-
-    if (this.statusFilter() !== 'All') {
-      items = items.filter(d => d.status === this.statusFilter());
-    }
-
-    if (this.dateSubmittedFilter() === 'Not Yet Submitted') {
-      items = items.filter(d => d.dateSubmitted === null);
-    }
-
-    return items;
+    return [...(mockDeliverablesByProject[id] ?? [])];
   });
 
-  toggleStatus() { this.statusOpen.update(v => !v); this.dateSubmittedOpen.set(false); }
-  toggleDateSubmitted() { this.dateSubmittedOpen.update(v => !v); this.statusOpen.set(false); }
-
-  setStatusFilter(val: 'All' | DeliverableStatus) { this.statusFilter.set(val); this.statusOpen.set(false); }
+  toggleDateSubmitted() { this.dateSubmittedOpen.update(v => !v); }
   setDateSubmittedFilter(val: string) { this.dateSubmittedFilter.set(val); this.dateSubmittedOpen.set(false); }
 
   panelDeliverable = signal<AdminPanelDeliverable | null>(null);
@@ -178,7 +185,7 @@ export class AdminProjectDetailComponent {
       project: this.project()?.projectName,
       dueDate: item.dueDate,
       dateSubmitted: item.dateSubmitted,
-      status: item.status,
+      status: 'Needs Review',
       aiSummary: item.aiSummary,
       fileUrl: item.fileUrl,
       submissionHistory: item.submissionHistory,
@@ -193,20 +200,5 @@ export class AdminProjectDetailComponent {
 
   onPanelStateChange(state: AdminPanelState) {
     this.panelState.set(state);
-  }
-
-  hasSubmission(status: DeliverableStatus): boolean {
-    return status === 'Submitted' || status === 'Needs Review' || status === 'Needs Resubmission';
-  }
-
-  getStatusBadgeStyle(status: DeliverableStatus): Record<string, string> {
-    switch (status) {
-      case 'Submitted':          return { background: '#dcfce7', color: '#166534' };
-      case 'Needs Resubmission': return { background: '#fef9c3', color: '#854d0e' };
-      case 'Overdue':            return { background: '#fee2e2', color: '#991b1b' };
-      case 'Due Soon':           return { background: '#ffedd5', color: '#9a3412' };
-      case 'Not Submitted':      return { background: '#dbeafe', color: '#1e40af' };
-      case 'Needs Review':        return { background: '#f3e8ff', color: '#6b21a8' };
-    }
   }
 }
