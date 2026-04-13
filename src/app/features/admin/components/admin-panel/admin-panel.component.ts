@@ -1,5 +1,5 @@
 import { Component, signal, input, output, OnInit } from '@angular/core';
-import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink } from 'lucide-angular';
+import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink, Sparkles } from 'lucide-angular';
 import { DeliverableStatus, SubmissionHistoryEntry } from '../../../recipient/models/submission.model';
 
 export type AdminPanelState = 'hidden' | 'normal' | 'expanded';
@@ -27,6 +27,7 @@ export class AdminPanelComponent implements OnInit {
   readonly ChevronsLeft = ChevronsLeft;
   readonly ChevronsRight = ChevronsRight;
   readonly ExternalLink = ExternalLink;
+  readonly Sparkles = Sparkles;
 
   deliverable = input.required<AdminPanelDeliverable>();
   panelState = input.required<AdminPanelState>();
