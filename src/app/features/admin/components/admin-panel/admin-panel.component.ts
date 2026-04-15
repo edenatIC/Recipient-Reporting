@@ -1,5 +1,5 @@
 import { Component, signal, input, output, OnInit } from '@angular/core';
-import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink, Sparkles } from 'lucide-angular';
+import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink, Sparkles, Download } from 'lucide-angular';
 import { SubmissionHistoryEntry } from '../../../recipient/models/submission.model';
 
 export type AdminDeliverableStatus = 'Needs Review' | 'Approved' | 'Resubmission Requested';
@@ -31,6 +31,9 @@ export class AdminPanelComponent implements OnInit {
   readonly ChevronsRight = ChevronsRight;
   readonly ExternalLink = ExternalLink;
   readonly Sparkles = Sparkles;
+  readonly Download = Download;
+
+  get isSF425() { return this.deliverable().deliverable === 'SF-425 Federal Financial Report'; }
 
   deliverable = input.required<AdminPanelDeliverable>();
   panelState = input.required<AdminPanelState>();
