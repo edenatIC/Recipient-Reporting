@@ -84,7 +84,7 @@
         <!-- Approved date notice -->
         @if (deliverable().status === 'Approved' && deliverable().approvedDate) {
           <p class="font-bold text-[14px] leading-[22px]" style="color: #166534;">
-            On {{ deliverable().approvedDate }} you approved this deliverable.
+            You approved this deliverable on {{ deliverable().approvedDate }}.
           </p>
         }
 
@@ -115,6 +115,7 @@
           @if (deliverable().aiSummary) {
             <p class="text-[14px] leading-[22px] text-[#475467]">{{ deliverable().aiSummary }}</p>
           }
+          <p class="text-[12px] leading-[18px] text-[#475467] italic mt-3">AI generated content may be incorrect.</p>
         </div>
 
       </div>
