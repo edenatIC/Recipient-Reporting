@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LucideAngularModule, ChevronDown } from 'lucide-angular';
 
 type ProjectStatus = 'Active' | 'Closed';
+type FaLab = 'FA' | 'Lab';
 
 interface AdminProject {
   id: string;
@@ -10,21 +11,22 @@ interface AdminProject {
   controlNumber: string;
   status: ProjectStatus;
   office: string;
+  faLab: FaLab;
 }
 
 const mockAdminProjects: AdminProject[] = [
-  { id: '1',  projectName: 'Solar Array Installation – Phase 1', controlNumber: 'DE-0001-2026', status: 'Active', office: 'Office of Solar Energy' },
-  { id: '2',  projectName: 'Wind Turbine Expansion',             controlNumber: 'DE-0002-2026', status: 'Active', office: 'Office of Wind Energy' },
-  { id: '3',  projectName: 'Grid Modernization Initiative',      controlNumber: 'DE-0003-2026', status: 'Active', office: 'Office of Electricity' },
-  { id: '4',  projectName: 'Coastal Energy Resilience Program',  controlNumber: 'DE-0004-2025', status: 'Closed', office: 'Office of Solar Energy' },
-  { id: '5',  projectName: 'Battery Storage Pilot',              controlNumber: 'DE-0005-2026', status: 'Active', office: 'Office of Electricity' },
-  { id: '6',  projectName: 'Rural Electrification Study',        controlNumber: 'DE-0006-2025', status: 'Closed', office: 'Office of Wind Energy' },
-  { id: '7',  projectName: 'Hydrogen Fuel Cell Research',        controlNumber: 'DE-0007-2026', status: 'Active', office: 'Office of Clean Energy' },
-  { id: '8',  projectName: 'Carbon Capture Demonstration',       controlNumber: 'DE-0008-2025', status: 'Closed', office: 'Office of Fossil Energy' },
-  { id: '9',  projectName: 'Nuclear Microreactor Study',         controlNumber: 'DE-0009-2026', status: 'Active', office: 'Office of Nuclear Energy' },
-  { id: '10', projectName: 'EV Charging Infrastructure Grant',   controlNumber: 'DE-0010-2026', status: 'Active', office: 'Office of Clean Energy' },
-  { id: '11', projectName: 'Offshore Wind Feasibility Study',    controlNumber: 'DE-0011-2025', status: 'Closed', office: 'Office of Wind Energy' },
-  { id: '12', projectName: 'Smart Grid Analytics Platform',      controlNumber: 'DE-0012-2026', status: 'Active', office: 'Office of Electricity' },
+  { id: '1',  projectName: 'Solar Array Installation – Phase 1', controlNumber: 'DE-0001-2026', status: 'Active', office: 'Office of Solar Energy',   faLab: 'FA'  },
+  { id: '2',  projectName: 'Wind Turbine Expansion',             controlNumber: 'DE-0002-2026', status: 'Active', office: 'Office of Wind Energy',     faLab: 'Lab' },
+  { id: '3',  projectName: 'Grid Modernization Initiative',      controlNumber: 'DE-0003-2026', status: 'Active', office: 'Office of Electricity',     faLab: 'FA'  },
+  { id: '4',  projectName: 'Coastal Energy Resilience Program',  controlNumber: 'DE-0004-2025', status: 'Closed', office: 'Office of Solar Energy',   faLab: 'Lab' },
+  { id: '5',  projectName: 'Battery Storage Pilot',              controlNumber: 'DE-0005-2026', status: 'Active', office: 'Office of Electricity',     faLab: 'Lab' },
+  { id: '6',  projectName: 'Rural Electrification Study',        controlNumber: 'DE-0006-2025', status: 'Closed', office: 'Office of Wind Energy',     faLab: 'FA'  },
+  { id: '7',  projectName: 'Hydrogen Fuel Cell Research',        controlNumber: 'DE-0007-2026', status: 'Active', office: 'Office of Clean Energy',    faLab: 'Lab' },
+  { id: '8',  projectName: 'Carbon Capture Demonstration',       controlNumber: 'DE-0008-2025', status: 'Closed', office: 'Office of Fossil Energy',   faLab: 'FA'  },
+  { id: '9',  projectName: 'Nuclear Microreactor Study',         controlNumber: 'DE-0009-2026', status: 'Active', office: 'Office of Nuclear Energy',  faLab: 'Lab' },
+  { id: '10', projectName: 'EV Charging Infrastructure Grant',   controlNumber: 'DE-0010-2026', status: 'Active', office: 'Office of Clean Energy',    faLab: 'FA'  },
+  { id: '11', projectName: 'Offshore Wind Feasibility Study',    controlNumber: 'DE-0011-2025', status: 'Closed', office: 'Office of Wind Energy',     faLab: 'Lab' },
+  { id: '12', projectName: 'Smart Grid Analytics Platform',      controlNumber: 'DE-0012-2026', status: 'Active', office: 'Office of Electricity',     faLab: 'FA'  },
 ];
 
 @Component({
