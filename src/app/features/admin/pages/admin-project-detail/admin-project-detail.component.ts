@@ -164,9 +164,29 @@ export class AdminProjectDetailComponent {
   readonly ChevronDown = ChevronDown;
   readonly Eye = Eye;
 
+  readonly quarterOptions = ['All', 'Q1', 'Q2', 'Q3', 'Q4'];
+  readonly deliverableTypeOptions = [
+    'All',
+    'SF-425 Federal Financial Report',
+    'Performance Report - Narrative',
+    'Performance Report - Quantative',
+    'Technical Progress Report',
+    'Research Performance Progress Report',
+  ];
+  readonly statusOptions = ['All', 'Needs Review'];
+  readonly dueDateOptions = ['All', 'This Week', 'This Month', 'Next Month'];
   readonly dateSubmittedOptions = ['All', 'This Week', 'This Month'];
 
+  quarterFilter = signal<string>('All');
+  deliverableTypeFilter = signal<string>('All');
+  statusFilter = signal<string>('All');
+  dueDateFilter = signal<string>('All');
   dateSubmittedFilter = signal<string>('All');
+
+  quarterOpen = signal(false);
+  deliverableTypeOpen = signal(false);
+  statusOpen = signal(false);
+  dueDateOpen = signal(false);
   dateSubmittedOpen = signal(false);
 
   project = computed(() => {
@@ -176,11 +196,40 @@ export class AdminProjectDetailComponent {
 
   filteredDeliverables = computed(() => {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
-    return [...(mockDeliverablesByProject[id] ?? [])];
+    let items = [...(mockDeliverablesByProject[id] ?? [])];
+
+    if (this.quarterFilter() !== 'All') {
+      items = items.filter(d => d.quarter === this.quarterFilter());
+    }
+    if (this.deliverableTypeFilter() !== 'All') {
+      items = items.filter(d => d.deliverable === this.deliverableTypeFilter());
+    }
+    if (this.statusFilter() !== 'All') {
+      items = items.filter(() => this.statusFilter() === 'Needs Review');
+    }
+
+    return items;
   });
 
-  toggleDateSubmitted() { this.dateSubmittedOpen.update(v => !v); }
-  setDateSubmittedFilter(val: string) { this.dateSubmittedFilter.set(val); this.dateSubmittedOpen.set(false); }
+  closeAll() {
+    this.quarterOpen.set(false);
+    this.deliverableTypeOpen.set(false);
+    this.statusOpen.set(false);
+    this.dueDateOpen.set(false);
+    this.dateSubmittedOpen.set(false);
+  }
+
+  toggleQuarter()          { const o = this.quarterOpen(); this.closeAll(); this.quarterOpen.set(!o); }
+  toggleDeliverableType()  { const o = this.deliverableTypeOpen(); this.closeAll(); this.deliverableTypeOpen.set(!o); }
+  toggleStatus()           { const o = this.statusOpen(); this.closeAll(); this.statusOpen.set(!o); }
+  toggleDueDate()          { const o = this.dueDateOpen(); this.closeAll(); this.dueDateOpen.set(!o); }
+  toggleDateSubmitted()    { const o = this.dateSubmittedOpen(); this.closeAll(); this.dateSubmittedOpen.set(!o); }
+
+  setQuarterFilter(val: string)         { this.quarterFilter.set(val); this.quarterOpen.set(false); }
+  setDeliverableTypeFilter(val: string) { this.deliverableTypeFilter.set(val); this.deliverableTypeOpen.set(false); }
+  setStatusFilter(val: string)          { this.statusFilter.set(val); this.statusOpen.set(false); }
+  setDueDateFilter(val: string)         { this.dueDateFilter.set(val); this.dueDateOpen.set(false); }
+  setDateSubmittedFilter(val: string)   { this.dateSubmittedFilter.set(val); this.dateSubmittedOpen.set(false); }
 
   panelDeliverable = signal<AdminPanelDeliverable | null>(null);
   panelState = signal<AdminPanelState>('hidden');

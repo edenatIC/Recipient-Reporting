@@ -22,7 +22,108 @@
   }
 
   <!-- Filters -->
-  <div class="flex items-center gap-3 mb-6">
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+
+    <!-- Quarter filter -->
+    <div class="relative">
+      <button
+        (click)="toggleQuarter()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Quarter
+        @if (quarterFilter() !== 'All') {
+          <span class="text-[#106636]">({{ quarterFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (quarterOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-40 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of quarterOptions; track opt) {
+            <button
+              (click)="setQuarterFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="quarterFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Deliverable Type filter -->
+    <div class="relative">
+      <button
+        (click)="toggleDeliverableType()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Deliverable Type
+        @if (deliverableTypeFilter() !== 'All') {
+          <span class="text-[#106636]">({{ deliverableTypeFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (deliverableTypeOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-72 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of deliverableTypeOptions; track opt) {
+            <button
+              (click)="setDeliverableTypeFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="deliverableTypeFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Status filter -->
+    <div class="relative">
+      <button
+        (click)="toggleStatus()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Status
+        @if (statusFilter() !== 'All') {
+          <span class="text-[#106636]">({{ statusFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (statusOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-44 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of statusOptions; track opt) {
+            <button
+              (click)="setStatusFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="statusFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Due Date filter -->
+    <div class="relative">
+      <button
+        (click)="toggleDueDate()"
+        class="flex items-center gap-2 px-4 py-2 border border-[#d0d5dd] rounded-lg text-sm font-medium text-[#344054] bg-white hover:bg-[#f9fafb] transition-colors cursor-pointer"
+      >
+        Due Date
+        @if (dueDateFilter() !== 'All') {
+          <span class="text-[#106636]">({{ dueDateFilter() }})</span>
+        }
+        <lucide-icon [img]="ChevronDown" [size]="14" class="text-[#667085]" />
+      </button>
+      @if (dueDateOpen()) {
+        <div class="absolute top-full left-0 mt-1 w-44 bg-white border border-[#eaecf0] rounded-lg shadow-lg z-20 py-1">
+          @for (opt of dueDateOptions; track opt) {
+            <button
+              (click)="setDueDateFilter(opt)"
+              class="w-full text-left px-4 py-2 text-sm text-[#344054] hover:bg-[#f9fafb] transition-colors"
+              [class.font-semibold]="dueDateFilter() === opt"
+            >{{ opt }}</button>
+          }
+        </div>
+      }
+    </div>
+
     <!-- Date Submitted filter -->
     <div class="relative">
       <button
@@ -47,6 +148,7 @@
         </div>
       }
     </div>
+
   </div>
 
   <!-- Table -->
