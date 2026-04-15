@@ -12,7 +12,7 @@
   <!-- Page heading -->
   @if (project(); as proj) {
     <div class="mb-6">
-      <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ proj.projectName }}</h1>
+      <h1 class="text-[32px] font-medium text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ proj.projectName }}</h1>
       <div class="mt-3 flex items-center gap-4 flex-wrap">
         <!-- Status badge -->
         <span
@@ -188,7 +188,7 @@
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.quarter }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.fiscalYear }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dueDate }}</td>
-            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted ?? '—' }}</td>
             <td class="px-5 py-4">
               <span
                 class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium"
