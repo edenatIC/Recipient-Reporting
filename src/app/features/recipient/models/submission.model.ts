@@ -33,7 +33,7 @@ const loremComment = '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
 export const mockDeliverables: Deliverable[] = [
   {
     id: '1',
-    deliverable: 'Q1 Progress Report',
+    deliverable: 'SF-425 Federal Financial Report',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '03/31/2026',
     dateSubmitted: '03/28/2026',
@@ -44,7 +44,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '2',
-    deliverable: 'Environmental Impact Assessment',
+    deliverable: 'Performance Report - Narrative',
     project: 'Wind Turbine Expansion',
     dueDate: '04/15/2026',
     dateSubmitted: null,
@@ -52,7 +52,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '3',
-    deliverable: 'Budget Justification Memo',
+    deliverable: 'Technical Progress Report',
     project: 'Grid Modernization Initiative',
     dueDate: '03/15/2026',
     dateSubmitted: null,
@@ -60,7 +60,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '4',
-    deliverable: 'Community Outreach Summary',
+    deliverable: 'Performance Report - Quantative',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '04/01/2026',
     dateSubmitted: '03/30/2026',
@@ -87,7 +87,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '5',
-    deliverable: 'Final Technical Report',
+    deliverable: 'Research Performance Progress Report',
     project: 'Wind Turbine Expansion',
     dueDate: '05/01/2026',
     dateSubmitted: null,
@@ -95,7 +95,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '6',
-    deliverable: 'Safety Compliance Checklist',
+    deliverable: 'SF-425 Federal Financial Report',
     project: 'Grid Modernization Initiative',
     dueDate: '04/10/2026',
     dateSubmitted: '04/08/2026',
@@ -106,7 +106,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '7',
-    deliverable: 'Mid-Year Financial Statement',
+    deliverable: 'Technical Progress Report',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '04/20/2026',
     dateSubmitted: null,

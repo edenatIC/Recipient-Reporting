@@ -23,13 +23,13 @@ const mockSubmissionHistory = [
 ];
 
 const mockAdminDeliverables: AdminDeliverable[] = [
-  { id: '1', deliverable: 'Q1 Progress Report',           project: 'Solar Array Installation – Phase 1', dueDate: '03/31/2026', dateSubmitted: '03/28/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '2', deliverable: 'Community Outreach Summary',   project: 'Solar Array Installation – Phase 1', dueDate: '04/01/2026', dateSubmitted: '03/30/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '3', deliverable: 'Safety Compliance Checklist',  project: 'Grid Modernization Initiative',      dueDate: '04/10/2026', dateSubmitted: '04/08/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '4', deliverable: 'Quarterly Equipment Log',      project: 'Wind Turbine Expansion',             dueDate: '03/25/2026', dateSubmitted: '03/24/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '5', deliverable: 'Site Assessment Report',       project: 'Grid Modernization Initiative',      dueDate: '04/05/2026', dateSubmitted: '04/04/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '6', deliverable: 'Stakeholder Engagement Summary', project: 'Wind Turbine Expansion',           dueDate: '04/12/2026', dateSubmitted: '04/11/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '7', deliverable: 'Energy Output Baseline Study', project: 'Solar Array Installation – Phase 1', dueDate: '04/18/2026', dateSubmitted: '04/16/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '1', deliverable: 'Performance Report - Narrative',          project: 'Solar Array Installation – Phase 1', dueDate: '03/31/2026', dateSubmitted: '03/28/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '2', deliverable: 'SF-425 Federal Financial Report',         project: 'Solar Array Installation – Phase 1', dueDate: '04/01/2026', dateSubmitted: '03/30/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '3', deliverable: 'Technical Progress Report',               project: 'Grid Modernization Initiative',      dueDate: '04/10/2026', dateSubmitted: '04/08/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '4', deliverable: 'Research Performance Progress Report',    project: 'Wind Turbine Expansion',             dueDate: '03/25/2026', dateSubmitted: '03/24/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '5', deliverable: 'Performance Report - Quantative',         project: 'Grid Modernization Initiative',      dueDate: '04/05/2026', dateSubmitted: '04/04/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '6', deliverable: 'SF-425 Federal Financial Report',         project: 'Wind Turbine Expansion',             dueDate: '04/12/2026', dateSubmitted: '04/11/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '7', deliverable: 'Technical Progress Report',               project: 'Solar Array Installation – Phase 1', dueDate: '04/18/2026', dateSubmitted: '04/16/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
 ];
 
 @Component({
