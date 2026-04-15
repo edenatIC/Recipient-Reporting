@@ -1,7 +1,7 @@
 <div class="px-8 py-8 max-w-[1400px] mx-auto w-full">
   <!-- Page heading -->
   <div class="mb-6">
-    <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Welcome, Admin User.</h1>
+    <h1 class="text-[32px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Welcome, Project Monitor.</h1>
     <p class="mt-1 text-sm text-[#667085]">View urgent deliverables for review here.</p>
   </div>
 
@@ -11,6 +11,8 @@
       <thead>
         <tr class="bg-white border-b border-[#eaecf0]">
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Deliverable</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Quarter</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Fiscal Year</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Project</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Due Date</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Date Submitted</th>
@@ -26,6 +28,8 @@
             [class.bg-[#fafafa]]="even"
           >
             <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.deliverable }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.quarter }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.fiscalYear }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.project }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dueDate }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted }}</td>

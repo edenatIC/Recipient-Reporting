@@ -3,11 +3,16 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideAngularModule, ArrowLeft, ChevronDown, Eye } from 'lucide-angular';
 import { AdminPanelComponent, AdminPanelState, AdminPanelDeliverable } from '../../components/admin-panel/admin-panel.component';
 
+type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+type FiscalYear = 'FY25' | 'FY26';
+
 interface ProjectDeliverable {
   id: string;
   deliverable: string;
   dueDate: string;
   dateSubmitted: string;
+  quarter: Quarter;
+  fiscalYear: FiscalYear;
   aiSummary: string;
   fileUrl: string;
   submissionHistory: { version: number; fileName: string; fileUrl: string; date: string; comment: string }[];
@@ -81,67 +86,68 @@ const mockProjects: AdminProjectSummary[] = [
 
 // ── Mock Deliverables ─────────────────────────────────────────────────────────
 
+// Federal fiscal year: Q1=Oct–Dec, Q2=Jan–Mar, Q3=Apr–Jun, Q4=Jul–Sep
 const mockDeliverablesByProject: Record<string, ProjectDeliverable[]> = {
   '1': [
-    { id: '1-1', deliverable: 'SF-425 Federal Financial Report',        dueDate: '03/31/2026', dateSubmitted: '03/28/2026', aiSummary: summaryProgressReport,   fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '1-2', deliverable: 'Performance Report - Narrative',         dueDate: '04/01/2026', dateSubmitted: '03/30/2026', aiSummary: summaryOutreachSummary,   fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '1-3', deliverable: 'Performance Report - Quantative',        dueDate: '04/18/2026', dateSubmitted: '04/16/2026', aiSummary: summaryBaselineStudy,     fileUrl: '#', submissionHistory: historyV2B   },
-    { id: '1-4', deliverable: 'Technical Progress Report',              dueDate: '04/25/2026', dateSubmitted: '04/22/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '1-5', deliverable: 'Research Performance Progress Report',   dueDate: '03/15/2026', dateSubmitted: '03/20/2026', aiSummary: summaryBudgetReport,      fileUrl: '#', submissionHistory: historyV3    },
+    { id: '1-1', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/31/2026', dateSubmitted: '03/28/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryProgressReport,    fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '1-2', deliverable: 'Performance Report - Narrative',        dueDate: '03/15/2026', dateSubmitted: '03/14/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryOutreachSummary,    fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '1-3', deliverable: 'Performance Report - Quantative',       dueDate: '04/18/2026', dateSubmitted: '04/16/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryBaselineStudy,      fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '1-4', deliverable: 'Technical Progress Report',             dueDate: '04/25/2026', dateSubmitted: '04/22/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '1-5', deliverable: 'Research Performance Progress Report',  dueDate: '12/15/2025', dateSubmitted: '12/18/2025', quarter: 'Q1', fiscalYear: 'FY26', aiSummary: summaryBudgetReport,       fileUrl: '#', submissionHistory: historyV3    },
   ],
   '2': [
-    { id: '2-1', deliverable: 'SF-425 Federal Financial Report',        dueDate: '03/25/2026', dateSubmitted: '03/24/2026', aiSummary: summaryEquipmentLog,      fileUrl: '#', submissionHistory: historyV2B   },
-    { id: '2-2', deliverable: 'Performance Report - Narrative',         dueDate: '04/12/2026', dateSubmitted: '04/11/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '2-3', deliverable: 'Technical Progress Report',              dueDate: '04/10/2026', dateSubmitted: '04/08/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '2-4', deliverable: 'Research Performance Progress Report',   dueDate: '03/20/2026', dateSubmitted: '03/19/2026', aiSummary: summaryBaselineStudy,     fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '2-1', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/25/2026', dateSubmitted: '03/24/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryEquipmentLog,       fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '2-2', deliverable: 'Performance Report - Narrative',        dueDate: '04/12/2026', dateSubmitted: '04/11/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryStakeholderSummary,  fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '2-3', deliverable: 'Technical Progress Report',             dueDate: '04/10/2026', dateSubmitted: '04/08/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '2-4', deliverable: 'Research Performance Progress Report',  dueDate: '12/20/2025', dateSubmitted: '12/18/2025', quarter: 'Q1', fiscalYear: 'FY26', aiSummary: summaryBaselineStudy,      fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '3': [
-    { id: '3-1', deliverable: 'Performance Report - Quantative',        dueDate: '04/10/2026', dateSubmitted: '04/08/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV3    },
-    { id: '3-2', deliverable: 'SF-425 Federal Financial Report',        dueDate: '04/05/2026', dateSubmitted: '04/04/2026', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '3-3', deliverable: 'Technical Progress Report',              dueDate: '04/20/2026', dateSubmitted: '04/18/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '3-4', deliverable: 'Performance Report - Narrative',         dueDate: '03/31/2026', dateSubmitted: '03/29/2026', aiSummary: summaryBudgetReport,       fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '3-1', deliverable: 'Performance Report - Quantative',       dueDate: '04/10/2026', dateSubmitted: '04/08/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV3    },
+    { id: '3-2', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/31/2026', dateSubmitted: '03/29/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '3-3', deliverable: 'Technical Progress Report',             dueDate: '04/20/2026', dateSubmitted: '04/18/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '3-4', deliverable: 'Performance Report - Narrative',        dueDate: '03/15/2026', dateSubmitted: '03/13/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryBudgetReport,        fileUrl: '#', submissionHistory: historyV2B   },
   ],
   '4': [
-    { id: '4-1', deliverable: 'Research Performance Progress Report',   dueDate: '02/28/2026', dateSubmitted: '02/25/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '4-2', deliverable: 'SF-425 Federal Financial Report',        dueDate: '03/15/2026', dateSubmitted: '03/12/2026', aiSummary: summaryTechReport,        fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '4-1', deliverable: 'Research Performance Progress Report',  dueDate: '06/30/2025', dateSubmitted: '06/27/2025', quarter: 'Q3', fiscalYear: 'FY25', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '4-2', deliverable: 'SF-425 Federal Financial Report',       dueDate: '06/15/2025', dateSubmitted: '06/12/2025', quarter: 'Q3', fiscalYear: 'FY25', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '5': [
-    { id: '5-1', deliverable: 'Performance Report - Narrative',         dueDate: '04/15/2026', dateSubmitted: '04/14/2026', aiSummary: summaryTechReport,        fileUrl: '#', submissionHistory: historyV2B   },
-    { id: '5-2', deliverable: 'Technical Progress Report',              dueDate: '04/20/2026', dateSubmitted: '04/17/2026', aiSummary: summaryEquipmentLog,      fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '5-3', deliverable: 'Performance Report - Quantative',        dueDate: '03/28/2026', dateSubmitted: '03/27/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '5-1', deliverable: 'Performance Report - Narrative',        dueDate: '04/15/2026', dateSubmitted: '04/14/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '5-2', deliverable: 'Technical Progress Report',             dueDate: '04/20/2026', dateSubmitted: '04/17/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryEquipmentLog,        fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '5-3', deliverable: 'Performance Report - Quantative',       dueDate: '03/28/2026', dateSubmitted: '03/27/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryStakeholderSummary,  fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '6': [
-    { id: '6-1', deliverable: 'Research Performance Progress Report',   dueDate: '02/20/2026', dateSubmitted: '02/18/2026', aiSummary: summaryBaselineStudy,    fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '6-2', deliverable: 'SF-425 Federal Financial Report',        dueDate: '03/10/2026', dateSubmitted: '03/08/2026', aiSummary: summaryOutreachSummary,  fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '6-1', deliverable: 'Research Performance Progress Report',  dueDate: '02/20/2025', dateSubmitted: '02/18/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryBaselineStudy,      fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '6-2', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/10/2025', dateSubmitted: '03/08/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryOutreachSummary,    fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '7': [
-    { id: '7-1', deliverable: 'Technical Progress Report',              dueDate: '04/08/2026', dateSubmitted: '04/07/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '7-2', deliverable: 'Performance Report - Narrative',         dueDate: '04/15/2026', dateSubmitted: '04/13/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '7-3', deliverable: 'Research Performance Progress Report',   dueDate: '03/31/2026', dateSubmitted: '04/02/2026', aiSummary: summaryProgressReport,    fileUrl: '#', submissionHistory: historyV3    },
+    { id: '7-1', deliverable: 'Technical Progress Report',             dueDate: '04/08/2026', dateSubmitted: '04/07/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '7-2', deliverable: 'Performance Report - Narrative',        dueDate: '04/15/2026', dateSubmitted: '04/13/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '7-3', deliverable: 'Research Performance Progress Report',  dueDate: '03/31/2026', dateSubmitted: '04/02/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryProgressReport,     fileUrl: '#', submissionHistory: historyV3    },
   ],
   '8': [
-    { id: '8-1', deliverable: 'SF-425 Federal Financial Report',        dueDate: '02/15/2026', dateSubmitted: '02/12/2026', aiSummary: summaryBaselineStudy,    fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '8-2', deliverable: 'Performance Report - Quantative',        dueDate: '03/01/2026', dateSubmitted: '02/28/2026', aiSummary: summaryAssessmentReport, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '8-1', deliverable: 'SF-425 Federal Financial Report',       dueDate: '02/15/2025', dateSubmitted: '02/12/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryBaselineStudy,      fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '8-2', deliverable: 'Performance Report - Quantative',       dueDate: '03/01/2025', dateSubmitted: '02/28/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '9': [
-    { id: '9-1', deliverable: 'Technical Progress Report',              dueDate: '04/12/2026', dateSubmitted: '04/10/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2B   },
-    { id: '9-2', deliverable: 'Performance Report - Narrative',         dueDate: '04/22/2026', dateSubmitted: '04/20/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '9-3', deliverable: 'SF-425 Federal Financial Report',        dueDate: '03/31/2026', dateSubmitted: '03/30/2026', aiSummary: summaryProgressReport,    fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '9-1', deliverable: 'Technical Progress Report',             dueDate: '04/12/2026', dateSubmitted: '04/10/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '9-2', deliverable: 'Performance Report - Narrative',        dueDate: '04/22/2026', dateSubmitted: '04/20/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '9-3', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/31/2026', dateSubmitted: '03/30/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryProgressReport,     fileUrl: '#', submissionHistory: historyV2Only },
   ],
   '10': [
-    { id: '10-1', deliverable: 'Research Performance Progress Report',  dueDate: '04/10/2026', dateSubmitted: '04/09/2026', aiSummary: summaryAssessmentReport,  fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '10-2', deliverable: 'Performance Report - Quantative',       dueDate: '04/18/2026', dateSubmitted: '04/15/2026', aiSummary: summaryStakeholderSummary, fileUrl: '#', submissionHistory: historyV3    },
-    { id: '10-3', deliverable: 'Performance Report - Narrative',        dueDate: '03/25/2026', dateSubmitted: '03/22/2026', aiSummary: summaryOutreachSummary,   fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '10-1', deliverable: 'Research Performance Progress Report', dueDate: '03/10/2026', dateSubmitted: '03/09/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '10-2', deliverable: 'Performance Report - Quantative',      dueDate: '04/18/2026', dateSubmitted: '04/15/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryStakeholderSummary,  fileUrl: '#', submissionHistory: historyV3    },
+    { id: '10-3', deliverable: 'Performance Report - Narrative',       dueDate: '03/25/2026', dateSubmitted: '03/22/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryOutreachSummary,    fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '11': [
-    { id: '11-1', deliverable: 'Technical Progress Report',             dueDate: '02/10/2026', dateSubmitted: '02/08/2026', aiSummary: summaryAssessmentReport, fileUrl: '#', submissionHistory: historyV2Only },
-    { id: '11-2', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/05/2026', dateSubmitted: '03/03/2026', aiSummary: summaryBaselineStudy,    fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '11-1', deliverable: 'Technical Progress Report',            dueDate: '02/10/2025', dateSubmitted: '02/08/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryAssessmentReport,   fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '11-2', deliverable: 'SF-425 Federal Financial Report',      dueDate: '03/05/2025', dateSubmitted: '03/03/2025', quarter: 'Q2', fiscalYear: 'FY25', aiSummary: summaryBaselineStudy,      fileUrl: '#', submissionHistory: historyV1Only },
   ],
   '12': [
-    { id: '12-1', deliverable: 'Research Performance Progress Report',  dueDate: '04/14/2026', dateSubmitted: '04/13/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV2B   },
-    { id: '12-2', deliverable: 'Performance Report - Narrative',        dueDate: '04/20/2026', dateSubmitted: '04/18/2026', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
-    { id: '12-3', deliverable: 'Technical Progress Report',             dueDate: '03/28/2026', dateSubmitted: '03/25/2026', aiSummary: summaryTechReport,         fileUrl: '#', submissionHistory: historyV3    },
-    { id: '12-4', deliverable: 'SF-425 Federal Financial Report',       dueDate: '03/31/2026', dateSubmitted: '03/30/2026', aiSummary: summaryProgressReport,    fileUrl: '#', submissionHistory: historyV2Only },
+    { id: '12-1', deliverable: 'Research Performance Progress Report', dueDate: '04/14/2026', dateSubmitted: '04/13/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV2B   },
+    { id: '12-2', deliverable: 'Performance Report - Narrative',       dueDate: '04/20/2026', dateSubmitted: '04/18/2026', quarter: 'Q3', fiscalYear: 'FY26', aiSummary: summaryComplianceChecklist, fileUrl: '#', submissionHistory: historyV1Only },
+    { id: '12-3', deliverable: 'Technical Progress Report',            dueDate: '03/28/2026', dateSubmitted: '03/25/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryTechReport,          fileUrl: '#', submissionHistory: historyV3    },
+    { id: '12-4', deliverable: 'SF-425 Federal Financial Report',      dueDate: '03/31/2026', dateSubmitted: '03/30/2026', quarter: 'Q2', fiscalYear: 'FY26', aiSummary: summaryProgressReport,     fileUrl: '#', submissionHistory: historyV2Only },
   ],
 };
 

@@ -55,6 +55,8 @@
       <thead>
         <tr class="bg-white border-b border-[#eaecf0]">
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Deliverable</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Quarter</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Fiscal Year</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Due Date</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Date Submitted</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Status</th>
@@ -69,6 +71,8 @@
             [class.bg-[#fafafa]]="even"
           >
             <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.deliverable }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.quarter }}</td>
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.fiscalYear }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dueDate }}</td>
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.dateSubmitted }}</td>
             <td class="px-5 py-4">
@@ -91,7 +95,7 @@
 
         @if (filteredDeliverables().length === 0) {
           <tr>
-            <td colspan="5" class="px-5 py-12 text-center text-sm text-[#667085]">
+            <td colspan="7" class="px-5 py-12 text-center text-sm text-[#667085]">
               No deliverables match the selected filters.
             </td>
           </tr>

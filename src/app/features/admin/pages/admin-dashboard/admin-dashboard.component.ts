@@ -3,12 +3,17 @@ import { LucideAngularModule, Eye, ChevronDown } from 'lucide-angular';
 import { DeliverableStatus } from '../../../recipient/models/submission.model';
 import { AdminPanelComponent, AdminPanelState, AdminPanelDeliverable } from '../../components/admin-panel/admin-panel.component';
 
+type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+type FiscalYear = 'FY25' | 'FY26';
+
 interface AdminDeliverable {
   id: string;
   deliverable: string;
   project: string;
   dueDate: string;
   dateSubmitted: string;
+  quarter: Quarter;
+  fiscalYear: FiscalYear;
   status: DeliverableStatus;
   aiSummary?: string;
   fileUrl?: string;
@@ -23,13 +28,13 @@ const mockSubmissionHistory = [
 ];
 
 const mockAdminDeliverables: AdminDeliverable[] = [
-  { id: '1', deliverable: 'Performance Report - Narrative',          project: 'Solar Array Installation – Phase 1', dueDate: '03/31/2026', dateSubmitted: '03/28/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '2', deliverable: 'SF-425 Federal Financial Report',         project: 'Solar Array Installation – Phase 1', dueDate: '04/01/2026', dateSubmitted: '03/30/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '3', deliverable: 'Technical Progress Report',               project: 'Grid Modernization Initiative',      dueDate: '04/10/2026', dateSubmitted: '04/08/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '4', deliverable: 'Research Performance Progress Report',    project: 'Wind Turbine Expansion',             dueDate: '03/25/2026', dateSubmitted: '03/24/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '5', deliverable: 'Performance Report - Quantative',         project: 'Grid Modernization Initiative',      dueDate: '04/05/2026', dateSubmitted: '04/04/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '6', deliverable: 'SF-425 Federal Financial Report',         project: 'Wind Turbine Expansion',             dueDate: '04/12/2026', dateSubmitted: '04/11/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
-  { id: '7', deliverable: 'Technical Progress Report',               project: 'Solar Array Installation – Phase 1', dueDate: '04/18/2026', dateSubmitted: '04/16/2026', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '1', deliverable: 'Performance Report - Narrative',        project: 'Solar Array Installation – Phase 1', dueDate: '03/15/2026', dateSubmitted: '03/12/2026', quarter: 'Q2', fiscalYear: 'FY26', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '2', deliverable: 'SF-425 Federal Financial Report',       project: 'Solar Array Installation – Phase 1', dueDate: '03/31/2026', dateSubmitted: '03/28/2026', quarter: 'Q2', fiscalYear: 'FY26', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '3', deliverable: 'Technical Progress Report',             project: 'Grid Modernization Initiative',      dueDate: '04/10/2026', dateSubmitted: '04/08/2026', quarter: 'Q3', fiscalYear: 'FY26', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '4', deliverable: 'Research Performance Progress Report',  project: 'Wind Turbine Expansion',             dueDate: '12/15/2025', dateSubmitted: '12/12/2025', quarter: 'Q1', fiscalYear: 'FY26', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '5', deliverable: 'Performance Report - Quantative',       project: 'Grid Modernization Initiative',      dueDate: '04/05/2026', dateSubmitted: '04/04/2026', quarter: 'Q3', fiscalYear: 'FY26', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '6', deliverable: 'SF-425 Federal Financial Report',       project: 'Wind Turbine Expansion',             dueDate: '09/15/2025', dateSubmitted: '09/10/2025', quarter: 'Q4', fiscalYear: 'FY25', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
+  { id: '7', deliverable: 'Technical Progress Report',             project: 'Solar Array Installation – Phase 1', dueDate: '03/31/2025', dateSubmitted: '03/28/2025', quarter: 'Q2', fiscalYear: 'FY25', status: 'Needs Review', aiSummary: mockAiSummary, fileUrl: '#', submissionHistory: mockSubmissionHistory },
 ];
 
 @Component({
