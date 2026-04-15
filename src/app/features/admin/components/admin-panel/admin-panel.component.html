@@ -79,7 +79,14 @@
 
     <!-- Summary tab -->
     @if (activeTab() === 'summary') {
-      <div class="space-y-6">
+      <div class="space-y-6" >
+
+        <!-- Approved date notice -->
+        @if (deliverable().status === 'Approved' && deliverable().approvedDate) {
+          <p class="font-bold text-[14px] leading-[22px]" style="color: #166534;">
+            On {{ deliverable().approvedDate }} you approved this deliverable.
+          </p>
+        }
 
         <!-- View Last Submission link -->
         <a
