@@ -88,6 +88,13 @@
           </p>
         }
 
+        <!-- Rejected date notice -->
+        @if (deliverable().status === 'Resubmission Requested' && deliverable().rejectedDate) {
+          <p class="font-bold text-[14px] leading-[22px]" style="color: #b45309;">
+            On {{ deliverable().rejectedDate }}, you rejected this deliverable with the following comments: "Please include more detail in section 3.B to ensure clarity around use of funds for the quarter."
+          </p>
+        }
+
         <!-- View Last Submission link -->
         <a
           [href]="deliverable().fileUrl ?? '#'"

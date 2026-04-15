@@ -13,6 +13,7 @@ export interface AdminPanelDeliverable {
   dateSubmitted: string | null;
   status: AdminDeliverableStatus;
   approvedDate?: string;
+  rejectedDate?: string;
   aiSummary?: string;
   fileUrl?: string;
   submissionHistory?: SubmissionHistoryEntry[];
