@@ -1,6 +1,6 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LucideAngularModule, ChevronDown } from 'lucide-angular';
+import { LucideAngularModule, ChevronDown, Search } from 'lucide-angular';
 
 type ProjectStatus = 'Active' | 'Closed';
 type FaLab = 'FA' | 'Lab';
@@ -38,6 +38,7 @@ const mockAdminProjects: AdminProject[] = [
 export class AdminProjectsComponent {
   private router = inject(Router);
   readonly ChevronDown = ChevronDown;
+  readonly Search = Search;
 
   readonly statusOptions: ('All' | ProjectStatus)[] = ['All', 'Active', 'Closed'];
   readonly officeOptions = [
@@ -49,29 +50,53 @@ export class AdminProjectsComponent {
     'Office of Fossil Energy',
     'Office of Nuclear Energy',
   ];
+  readonly faLabOptions: ('All' | FaLab)[] = ['All', 'FA', 'Lab'];
 
+  searchTerm = signal('');
   statusFilter = signal<'All' | ProjectStatus>('All');
   officeFilter = signal<string>('All Offices');
+  faLabFilter = signal<'All' | FaLab>('All');
 
   statusOpen = signal(false);
   officeOpen = signal(false);
+  faLabOpen = signal(false);
 
   filteredProjects = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
     let items = [...mockAdminProjects];
+    if (term) {
+      items = items.filter(p =>
+        p.projectName.toLowerCase().includes(term) ||
+        p.controlNumber.toLowerCase().includes(term)
+      );
+    }
     if (this.statusFilter() !== 'All') {
       items = items.filter(p => p.status === this.statusFilter());
     }
     if (this.officeFilter() !== 'All Offices') {
       items = items.filter(p => p.office === this.officeFilter());
     }
+    if (this.faLabFilter() !== 'All') {
+      items = items.filter(p => p.faLab === this.faLabFilter());
+    }
     return items;
   });
 
-  toggleStatus() { this.statusOpen.update(v => !v); this.officeOpen.set(false); }
-  toggleOffice() { this.officeOpen.update(v => !v); this.statusOpen.set(false); }
+  closeAll() {
+    this.statusOpen.set(false);
+    this.officeOpen.set(false);
+    this.faLabOpen.set(false);
+  }
+
+  toggleStatus() { const o = this.statusOpen(); this.closeAll(); this.statusOpen.set(!o); }
+  toggleOffice() { const o = this.officeOpen(); this.closeAll(); this.officeOpen.set(!o); }
+  toggleFaLab()  { const o = this.faLabOpen();  this.closeAll(); this.faLabOpen.set(!o); }
 
   setStatusFilter(val: 'All' | ProjectStatus) { this.statusFilter.set(val); this.statusOpen.set(false); }
-  setOfficeFilter(val: string) { this.officeFilter.set(val); this.officeOpen.set(false); }
+  setOfficeFilter(val: string)                 { this.officeFilter.set(val); this.officeOpen.set(false); }
+  setFaLabFilter(val: 'All' | FaLab)          { this.faLabFilter.set(val); this.faLabOpen.set(false); }
+
+  onSearchInput(value: string) { this.searchTerm.set(value); }
 
   goToProject(id: string) { this.router.navigate(['/admin/projects', id]); }
 
