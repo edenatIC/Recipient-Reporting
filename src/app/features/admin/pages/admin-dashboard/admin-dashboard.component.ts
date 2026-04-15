@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { LucideAngularModule, Eye, ChevronDown } from 'lucide-angular';
-import { DeliverableStatus } from '../../../recipient/models/submission.model';
-import { AdminPanelComponent, AdminPanelState, AdminPanelDeliverable } from '../../components/admin-panel/admin-panel.component';
+import { AdminPanelComponent, AdminPanelState, AdminPanelDeliverable, AdminDeliverableStatus } from '../../components/admin-panel/admin-panel.component';
 
 type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
 type FiscalYear = 'FY25' | 'FY26';
@@ -14,7 +13,7 @@ interface AdminDeliverable {
   dateSubmitted: string;
   quarter: Quarter;
   fiscalYear: FiscalYear;
-  status: DeliverableStatus;
+  status: AdminDeliverableStatus;
   aiSummary?: string;
   fileUrl?: string;
   submissionHistory?: { version: number; fileName: string; fileUrl: string; date: string; comment: string }[];
@@ -49,7 +48,13 @@ export class AdminDashboardComponent {
 
   deliverables = mockAdminDeliverables;
 
-  readonly needReviewBadgeStyle: Record<string, string> = { background: '#f3e8ff', color: '#6b21a8' };
+  getStatusBadgeStyle(status: AdminDeliverableStatus): Record<string, string> {
+    switch (status) {
+      case 'Needs Review':           return { background: '#f3e8ff', color: '#6b21a8' };
+      case 'Approved':               return { background: '#dcfce7', color: '#166534' };
+      case 'Resubmission Requested': return { background: '#fef9c3', color: '#854d0e' };
+    }
+  }
 
   panelDeliverable = signal<AdminPanelDeliverable | null>(null);
   panelState = signal<AdminPanelState>('hidden');

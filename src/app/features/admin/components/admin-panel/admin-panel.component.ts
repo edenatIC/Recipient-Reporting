@@ -1,7 +1,8 @@
 import { Component, signal, input, output, OnInit } from '@angular/core';
 import { LucideAngularModule, X, ChevronsLeft, ChevronsRight, ExternalLink, Sparkles } from 'lucide-angular';
-import { DeliverableStatus, SubmissionHistoryEntry } from '../../../recipient/models/submission.model';
+import { SubmissionHistoryEntry } from '../../../recipient/models/submission.model';
 
+export type AdminDeliverableStatus = 'Needs Review' | 'Approved' | 'Resubmission Requested';
 export type AdminPanelState = 'hidden' | 'normal' | 'expanded';
 type PanelTab = 'summary' | 'history';
 
@@ -10,7 +11,7 @@ export interface AdminPanelDeliverable {
   project?: string;
   dueDate: string;
   dateSubmitted: string | null;
-  status: DeliverableStatus;
+  status: AdminDeliverableStatus;
   aiSummary?: string;
   fileUrl?: string;
   submissionHistory?: SubmissionHistoryEntry[];
@@ -72,14 +73,11 @@ export class AdminPanelComponent implements OnInit {
     this.rejectComment.set('');
   }
 
-  getStatusBadgeStyle(status: DeliverableStatus): Record<string, string> {
+  getStatusBadgeStyle(status: AdminDeliverableStatus): Record<string, string> {
     switch (status) {
-      case 'Submitted':          return { background: '#dcfce7', color: '#166534' };
-      case 'Needs Resubmission': return { background: '#fef9c3', color: '#854d0e' };
-      case 'Overdue':            return { background: '#fee2e2', color: '#991b1b' };
-      case 'Due Soon':           return { background: '#ffedd5', color: '#9a3412' };
-      case 'Not Submitted':      return { background: '#dbeafe', color: '#1e40af' };
-      case 'Needs Review':       return { background: '#f3e8ff', color: '#6b21a8' };
+      case 'Needs Review':           return { background: '#f3e8ff', color: '#6b21a8' };
+      case 'Approved':               return { background: '#dcfce7', color: '#166534' };
+      case 'Resubmission Requested': return { background: '#fef9c3', color: '#854d0e' };
     }
   }
 }
