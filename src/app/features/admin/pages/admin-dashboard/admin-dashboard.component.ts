@@ -53,6 +53,7 @@ export class AdminDashboardComponent {
       case 'Needs Review':           return { background: '#f3e8ff', color: '#6b21a8' };
       case 'Approved':               return { background: '#dcfce7', color: '#166534' };
       case 'Resubmission Requested': return { background: '#fef9c3', color: '#854d0e' };
+      case 'Not Submitted':          return { background: '#dbeafe', color: '#1e40af' };
     }
   }
 
