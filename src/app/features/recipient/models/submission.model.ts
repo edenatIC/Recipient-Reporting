@@ -6,6 +6,8 @@ export type DeliverableStatus =
   | 'Not Submitted'
   | 'Needs Review';
 
+export type Quarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+
 export interface SubmissionHistoryEntry {
   version: number;
   fileName: string;
@@ -17,6 +19,7 @@ export interface SubmissionHistoryEntry {
 export interface Deliverable {
   id: string;
   deliverable: string;
+  quarter: Quarter;
   project: string;
   dueDate: string;
   dateSubmitted: string | null;
@@ -34,6 +37,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '1',
     deliverable: 'SF-425 Federal Financial Report',
+    quarter: 'Q2',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '03/31/2026',
     dateSubmitted: '03/28/2026',
@@ -45,6 +49,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '2',
     deliverable: 'Performance Report - Narrative',
+    quarter: 'Q3',
     project: 'Wind Turbine Expansion',
     dueDate: '04/15/2026',
     dateSubmitted: null,
@@ -53,6 +58,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '3',
     deliverable: 'SF-425 Federal Financial Report',
+    quarter: 'Q2',
     project: 'Grid Modernization Initiative',
     dueDate: '03/15/2026',
     dateSubmitted: null,
@@ -61,6 +67,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '4',
     deliverable: 'Performance Report - Quantative',
+    quarter: 'Q3',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '04/01/2026',
     dateSubmitted: '03/30/2026',
@@ -88,6 +95,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '5',
     deliverable: 'Research Performance Progress Report',
+    quarter: 'Q3',
     project: 'Wind Turbine Expansion',
     dueDate: '05/01/2026',
     dateSubmitted: null,
@@ -96,6 +104,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '6',
     deliverable: 'SF-425 Federal Financial Report',
+    quarter: 'Q3',
     project: 'Grid Modernization Initiative',
     dueDate: '04/10/2026',
     dateSubmitted: '04/08/2026',
@@ -107,6 +116,7 @@ export const mockDeliverables: Deliverable[] = [
   {
     id: '7',
     deliverable: 'Technical Progress Report',
+    quarter: 'Q3',
     project: 'Solar Array Installation – Phase 1',
     dueDate: '04/20/2026',
     dateSubmitted: null,

@@ -111,6 +111,7 @@
       <thead>
         <tr class="bg-white border-b border-[#eaecf0]">
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Deliverable</th>
+          <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Quarter</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Project</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Due Date</th>
           <th class="text-left px-5 py-3.5 text-xs font-semibold text-[#667085] uppercase tracking-wide">Date Submitted</th>
@@ -127,6 +128,9 @@
           >
             <!-- Deliverable -->
             <td class="px-5 py-4 text-sm font-semibold text-[#101828]">{{ item.deliverable }}</td>
+
+            <!-- Quarter -->
+            <td class="px-5 py-4 text-sm text-[#344054]">{{ item.quarter }}</td>
 
             <!-- Project -->
             <td class="px-5 py-4 text-sm text-[#344054]">{{ item.project }}</td>
@@ -166,7 +170,7 @@
 
         @if (filteredDeliverables().length === 0) {
           <tr>
-            <td colspan="6" class="px-5 py-12 text-center text-sm text-[#667085]">
+            <td colspan="7" class="px-5 py-12 text-center text-sm text-[#667085]">
               No deliverables match the selected filters.
             </td>
           </tr>
