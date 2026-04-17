@@ -1,5 +1,5 @@
 import { Component, computed, signal, inject } from '@angular/core';
-import { LucideAngularModule, Upload, Eye, ChevronDown, X, CloudUpload } from 'lucide-angular';
+import { LucideAngularModule, Upload, Eye, ChevronDown, X, CloudUpload, Sparkles, TriangleAlert } from 'lucide-angular';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { UserRole } from '../../../../core/auth/auth.model';
 import { mockDeliverables, Deliverable, DeliverableStatus } from '../../models/submission.model';
@@ -13,6 +13,7 @@ type ProjectFilter = 'All Projects' | string;
   standalone: true,
   imports: [LucideAngularModule, DeliverablePanelComponent],
   templateUrl: './dashboard.component.html',
+  styles: [`@keyframes spin { to { transform: rotate(360deg); } } .ai-spin { animation: spin 1s linear infinite; }`],
 })
 export class DashboardComponent {
   private authService = inject(AuthService);
@@ -22,6 +23,8 @@ export class DashboardComponent {
   readonly ChevronDown = ChevronDown;
   readonly X = X;
   readonly CloudUpload = CloudUpload;
+  readonly Sparkles = Sparkles;
+  readonly TriangleAlert = TriangleAlert;
 
   isAdmin = computed(() => this.authService.currentUser()?.role === UserRole.Admin);
 
@@ -39,6 +42,7 @@ export class DashboardComponent {
   isReupload = signal(false);
   selectedFile = signal<File | null>(null);
   isDragOver = signal(false);
+  uploadPhase = signal<'idle' | 'analyzing' | 'flagged'>('idle');
 
   panelDeliverable = signal<Deliverable | null>(null);
   panelState = signal<PanelState>('hidden');
@@ -173,6 +177,7 @@ export class DashboardComponent {
     this.isReupload.set(false);
     this.selectedFile.set(null);
     this.isDragOver.set(false);
+    this.uploadPhase.set('idle');
   }
 
   onFileSelected(event: Event) {
@@ -200,7 +205,11 @@ export class DashboardComponent {
 
   submitUpload() {
     if (!this.selectedFile()) return;
-    console.log('Uploading:', this.selectedFile()?.name, 'for', this.uploadTarget()?.deliverable);
-    this.closeModal();
+    if (this.uploadTarget()?.deliverable === 'SF-425 Federal Financial Report') {
+      this.uploadPhase.set('analyzing');
+      setTimeout(() => this.uploadPhase.set('flagged'), 3000);
+    } else {
+      this.closeModal();
+    }
   }
 }

@@ -199,74 +199,117 @@
     >
       <div class="px-8 pt-10 pb-8">
 
-        <!-- Title + close -->
-        <div class="flex items-start justify-between mb-4">
-          <h2 class="text-[22px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ isReupload() ? 'Re-upload Deliverable' : 'Upload Deliverable' }}</h2>
-          <button
-            (click)="closeModal()"
-            class="w-7 h-7 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
-          >
-            <lucide-icon [img]="X" [size]="16" />
-          </button>
-        </div>
-
-        <!-- Deliverable meta -->
-        <div class="mb-6">
-          <div class="flex items-center gap-10 mb-1.5">
-            <p class="text-sm text-[#667085]">Deliverable: {{ uploadTarget()!.deliverable }}</p>
-            <p class="text-sm text-[#667085]">Project: {{ uploadTarget()!.project }}</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <p class="text-sm text-[#667085]">Deadline: {{ uploadTarget()!.dueDate }}</p>
-            <span
-              class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
-              [style]="getStatusBadgeStyle(uploadTarget()!.status)"
-            >{{ uploadTarget()!.status }}</span>
-          </div>
-        </div>
-
-        <!-- Drop zone -->
-        <label
-          class="flex flex-col items-center justify-center w-full cursor-pointer transition-colors"
-          style="border-radius: 12px; border-width: 1.5px; border-style: dashed; min-height: 280px; padding: 0 32px;"
-          [style.border-color]="isDragOver() ? '#106636' : '#c8d0da'"
-          [style.background]="isDragOver() ? '#f0faf4' : '#ffffff'"
-          (dragover)="onDragOver($event)"
-          (dragleave)="onDragLeave()"
-          (drop)="onDrop($event)"
-        >
-          <input type="file" class="hidden" (change)="onFileSelected($event)" />
-
-          @if (selectedFile()) {
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-[#e6f4ea] flex items-center justify-center">
-                <lucide-icon [img]="CloudUpload" [size]="20" style="color: #106636" />
+        <!-- ── ANALYZING phase ── -->
+        @if (uploadPhase() === 'analyzing') {
+          <div class="flex flex-col items-center justify-center py-10 gap-6">
+            <div class="ai-spin" style="width: 56px; height: 56px; border-radius: 50%; border: 3px solid #e5e7eb; border-top-color: #106636;"></div>
+            <div class="text-center">
+              <div class="flex items-center justify-center gap-1.5 mb-2">
+                <p class="text-[18px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Analyzing Document</p>
+                <lucide-icon [img]="Sparkles" [size]="16" style="color: #6b21a8;" />
               </div>
+              <p class="text-sm text-[#667085] max-w-sm">Our AI is scanning your SF-425 for completeness and errors. This may take a moment…</p>
+            </div>
+          </div>
+
+        <!-- ── FLAGGED phase ── -->
+        } @else if (uploadPhase() === 'flagged') {
+          <div class="flex items-start justify-between mb-6">
+            <h2 class="text-[22px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">Issue Found</h2>
+            <button
+              (click)="closeModal()"
+              class="w-7 h-7 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
+            >
+              <lucide-icon [img]="X" [size]="16" />
+            </button>
+          </div>
+          <div class="rounded-xl p-5 mb-6" style="background: #fff7ed; border: 1px solid #fed7aa;">
+            <div class="flex items-start gap-3">
+              <lucide-icon [img]="TriangleAlert" [size]="20" style="color: #c2410c; margin-top: 1px; flex-shrink: 0;" />
               <div>
-                <p class="text-sm font-medium text-[#101828]">{{ selectedFile()!.name }}</p>
-                <p class="text-xs text-[#667085] mt-0.5">{{ (selectedFile()!.size / 1024).toFixed(1) }} KB</p>
+                <p class="text-sm font-semibold text-[#9a3412] mb-1">Section 3B Incomplete</p>
+                <p class="text-sm text-[#9a3412] leading-[22px]">Our AI flagged that <strong>Section 3B</strong> of the SF-425 Federal Financial Report does not appear to have been filled out. Please complete this section and resubmit your document.</p>
               </div>
             </div>
-          } @else {
-            <lucide-icon [img]="CloudUpload" [size]="44" style="color: #667085; margin-bottom: 20px;" />
-            <p style="font-size: 16px; font-weight: 600; color: #101828; margin-bottom: 6px;">Drag & drop your file here</p>
-            <p style="font-size: 14px; color: #667085; margin-bottom: 16px;">or <span style="color: #106636; font-weight: 600;">browse to upload</span></p>
-            <p style="font-size: 13px; color: #98a2b3;">PDF, DOCX, XLSX, or ZIP — max 25 MB</p>
-          }
-        </label>
+          </div>
+          <div class="flex justify-center">
+            <button
+              (click)="uploadPhase.set('idle'); selectedFile.set(null);"
+              class="px-8 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors cursor-pointer"
+              style="background: #106636; font-family: inherit;"
+              onmouseover="this.style.background='#0d5229'"
+              onmouseout="this.style.background='#106636'"
+            >
+              Re-upload
+            </button>
+          </div>
 
-        <!-- Actions -->
-        <div class="flex items-center justify-center gap-3 mt-8">
+        <!-- ── IDLE phase (normal upload form) ── -->
+        } @else {
+          <div class="flex items-start justify-between mb-4">
+            <h2 class="text-[22px] font-bold text-[#101828]" style="font-family: 'Figtree', sans-serif;">{{ isReupload() ? 'Re-upload Deliverable' : 'Upload Deliverable' }}</h2>
+            <button
+              (click)="closeModal()"
+              class="w-7 h-7 flex items-center justify-center text-[#667085] hover:text-[#344054] hover:bg-[#f2f4f7] rounded-lg transition-colors cursor-pointer"
+            >
+              <lucide-icon [img]="X" [size]="16" />
+            </button>
+          </div>
 
-          <button
-            (click)="submitUpload()"
-            class="px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors cursor-pointer"
-            [style]="selectedFile() ? { background: '#106636' } : { background: '#9cbfab', cursor: 'not-allowed' }"
-            [disabled]="!selectedFile()"
+          <div class="mb-6">
+            <div class="flex items-center gap-10 mb-1.5">
+              <p class="text-sm text-[#667085]">Deliverable: {{ uploadTarget()!.deliverable }}</p>
+              <p class="text-sm text-[#667085]">Project: {{ uploadTarget()!.project }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <p class="text-sm text-[#667085]">Deadline: {{ uploadTarget()!.dueDate }}</p>
+              <span
+                class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [style]="getStatusBadgeStyle(uploadTarget()!.status)"
+              >{{ uploadTarget()!.status }}</span>
+            </div>
+          </div>
+
+          <label
+            class="flex flex-col items-center justify-center w-full cursor-pointer transition-colors"
+            style="border-radius: 12px; border-width: 1.5px; border-style: dashed; min-height: 280px; padding: 0 32px;"
+            [style.border-color]="isDragOver() ? '#106636' : '#c8d0da'"
+            [style.background]="isDragOver() ? '#f0faf4' : '#ffffff'"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave()"
+            (drop)="onDrop($event)"
           >
-            Upload File
-          </button>
-        </div>
+            <input type="file" class="hidden" (change)="onFileSelected($event)" />
+
+            @if (selectedFile()) {
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#e6f4ea] flex items-center justify-center">
+                  <lucide-icon [img]="CloudUpload" [size]="20" style="color: #106636" />
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-[#101828]">{{ selectedFile()!.name }}</p>
+                  <p class="text-xs text-[#667085] mt-0.5">{{ (selectedFile()!.size / 1024).toFixed(1) }} KB</p>
+                </div>
+              </div>
+            } @else {
+              <lucide-icon [img]="CloudUpload" [size]="44" style="color: #667085; margin-bottom: 20px;" />
+              <p style="font-size: 16px; font-weight: 600; color: #101828; margin-bottom: 6px;">Drag & drop your file here</p>
+              <p style="font-size: 14px; color: #667085; margin-bottom: 16px;">or <span style="color: #106636; font-weight: 600;">browse to upload</span></p>
+              <p style="font-size: 13px; color: #98a2b3;">PDF, DOCX, XLSX, or ZIP — max 25 MB</p>
+            }
+          </label>
+
+          <div class="flex items-center justify-center gap-3 mt-8">
+            <button
+              (click)="submitUpload()"
+              class="px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors cursor-pointer"
+              [style]="selectedFile() ? { background: '#106636' } : { background: '#9cbfab', cursor: 'not-allowed' }"
+              [disabled]="!selectedFile()"
+            >
+              Upload File
+            </button>
+          </div>
+        }
 
       </div>
     </div>
