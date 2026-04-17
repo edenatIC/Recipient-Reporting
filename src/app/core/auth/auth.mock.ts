@@ -19,8 +19,8 @@ export const mockUsers: User[] = [
   {
     email: 'a@email.com',
     password: 'password',
-    firstName: 'Admin',
-    lastName: 'User',
+    firstName: 'Project',
+    lastName: 'Monitor',
     role: UserRole.Admin,
   },
 ];
