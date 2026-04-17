@@ -52,7 +52,7 @@ export const mockDeliverables: Deliverable[] = [
   },
   {
     id: '3',
-    deliverable: 'Technical Progress Report',
+    deliverable: 'SF-425 Federal Financial Report',
     project: 'Grid Modernization Initiative',
     dueDate: '03/15/2026',
     dateSubmitted: null,
